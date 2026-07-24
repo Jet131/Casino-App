@@ -35,13 +35,13 @@
   --card-shadow: 0 6px 0 rgba(43,27,18,0.28);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: #073019; }
+html, body { height: 100%; background: #150F1A; }
 body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; overflow: hidden; }
 .disp { font-family: 'Fredoka', sans-serif; }
 
-#root { display: flex; justify-content: center; height: 100vh; }
+#root { display: flex; justify-content: center; height: 100vh; height: 100dvh; }
 .app {
-  width: 100%; max-width: 480px; height: 100vh; background: var(--paper);
+  width: 100%; max-width: 480px; height: 100vh; height: 100dvh; background: var(--paper);
   display: flex; flex-direction: column; position: relative; overflow: hidden;
   padding-top: env(safe-area-inset-top, 0px);
   box-shadow: 0 0 60px rgba(0,0,0,0.35);
@@ -948,7 +948,7 @@ function useConfetti() {
     }),
     coinBursts.map(function (b) {
       return b.bits.map(function (bit) {
-        return e("div", { key: bit.id, className: "coin-bit", style: { left: b.x + bit.dx, top: b.y, animationDelay: bit.delay + "s" } }, "\uD83E\uDE99");
+        return e("div", { key: bit.id, className: "coin-bit", style: { left: b.x + bit.dx, top: b.y, animationDelay: bit.delay + "s" } }, "\uD83D\uDCB0");
       });
     }),
     bigTexts.map(function (t) {
@@ -970,7 +970,7 @@ function useWalletFlash() {
 
 function WalletPill(props) {
   const cls = "wallet-pill" + (props.flash ? (props.flash.indexOf("win") === 0 ? " pop-win" : " pop-lose") : "");
-  return e("div", { className: cls }, e("span", { className: "coin-icon" }, "\uD83E\uDE99"), fmt(props.wallet));
+  return e("div", { className: cls }, e("span", { className: "coin-icon" }, "\uD83D\uDCB0"), fmt(props.wallet));
 }
 
 function MarqueeLights(props) {
@@ -990,7 +990,7 @@ function BetTray(props) {
   const maxWallet = props.maxWallet || 0;
   const available = CHIP_DENOMS.filter(function (c) { return maxWallet >= c.threshold; });
   return e("div", { className: "bet-tray" },
-    e("div", { className: "bet-tray-row" }, e("span", { className: "bet-tray-label" }, label), e("span", { className: "bet-amount" }, "\uD83E\uDE99 " + fmt(bet))),
+    e("div", { className: "bet-tray-row" }, e("span", { className: "bet-tray-label" }, label), e("span", { className: "bet-amount" }, "\uD83D\uDCB0 " + fmt(bet))),
     e("div", { className: "chip-row" },
       available.map(function (c) {
         return e("button", {
@@ -1087,7 +1087,7 @@ function Lobby(props) {
   const wallet = props.wallet, goTo = props.goTo;
   return e("div", null,
     e("div", { className: "lobby-hero" },
-      e("div", { className: "lobby-hero-amount" }, "\uD83E\uDE99 " + fmt(wallet)),
+      e("div", { className: "lobby-hero-amount" }, "\uD83D\uDCB0 " + fmt(wallet)),
       e("div", { className: "lobby-hero-label" }, "Fake chips \u00B7 all in good fun")
     ),
     e("div", { className: "game-grid" },
@@ -1219,8 +1219,8 @@ function RouletteGame(props) {
       e(RouletteWheel, { rotation: rotation })
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded \uD83E\uDE99" + fmt(result.payout)) :
-      result.won ? ("\uD83C\uDF89 " + result.number + " hits! +\uD83E\uDE99" + fmt(result.payout)) : ("Landed on " + result.number + " \u2014 no win this time" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + result.cashback + " cashback)" : ""))
+      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
+      result.won ? ("\uD83C\uDF89 " + result.number + " hits! +\uD83D\uDCB0" + fmt(result.payout)) : ("Landed on " + result.number + " \u2014 no win this time" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
     ) : null,
     e("div", { className: "bet-type-row" },
       OUTSIDE_BETS.map(function (b) {
@@ -1311,8 +1311,8 @@ function DuckGame(props) {
       )
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that race \u2014 refunded \uD83E\uDE99" + fmt(result.payout)) :
-      result.won ? ("\uD83C\uDF89 Your duck wins! +\uD83E\uDE99" + fmt(result.payout)) : (DUCK_PALETTE[result.winner].name + " won \u2014 not yours this time" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + result.cashback + " cashback)" : ""))
+      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that race \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
+      result.won ? ("\uD83C\uDF89 Your duck wins! +\uD83D\uDCB0" + fmt(result.payout)) : (DUCK_PALETTE[result.winner].name + " won \u2014 not yours this time" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
     ) : null,
     e("div", { className: "duck-pick-row" },
       DUCK_PALETTE.map(function (d, i) {
@@ -1446,8 +1446,8 @@ function PenguinGame(props) {
       )
     ),
     ended ? e("div", { className: "result-banner " + (ended.won ? "win" : "lose") },
-      ended.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that one \u2014 refunded \uD83E\uDE99" + fmt(ended.payout)) :
-      ended.won ? ("\uD83C\uDF89 Cashed out! +\uD83E\uDE99" + fmt(ended.payout)) : ("The ice gave way \u2014 round over" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + ended.cashback + " cashback)" : ""))
+      ended.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that one \u2014 refunded \uD83D\uDCB0" + fmt(ended.payout)) :
+      ended.won ? ("\uD83C\uDF89 Cashed out! +\uD83D\uDCB0" + fmt(ended.payout)) : ("The ice gave way \u2014 round over" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + ended.cashback + " cashback)" : ""))
     ) : null,
     !active ? e("div", { className: "difficulty-row" },
       DIFFICULTIES.map(function (d) {
@@ -1555,8 +1555,8 @@ function RocketGame(props) {
       )
     ),
     ended ? e("div", { className: "result-banner " + (ended.won ? "win" : "lose") },
-      ended.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that blast \u2014 refunded \uD83E\uDE99" + fmt(ended.payout)) :
-      ended.won ? ("\uD83C\uDF89 Cashed out at " + multiplier.toFixed(2) + "\u00D7! +\uD83E\uDE99" + fmt(ended.payout)) : ("Exploded at " + multiplier.toFixed(2) + "\u00D7 \u2014 lost the bet" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + ended.cashback + " cashback)" : ""))
+      ended.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that blast \u2014 refunded \uD83D\uDCB0" + fmt(ended.payout)) :
+      ended.won ? ("\uD83C\uDF89 Cashed out at " + multiplier.toFixed(2) + "\u00D7! +\uD83D\uDCB0" + fmt(ended.payout)) : ("Exploded at " + multiplier.toFixed(2) + "\u00D7 \u2014 lost the bet" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + ended.cashback + " cashback)" : ""))
     ) : null,
     e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: maxWallet, disabled: flying }),
     flying
@@ -1684,7 +1684,7 @@ function charmBadgeColor(level) {
 
 /* ================= FORTUNE CARDS ================= */
 const CARDS = [
-  { id: "cc1", name: "The Chip Stack", icon: "\uD83E\uDE99", rarity: "common", weight: 20 },
+  { id: "cc1", name: "The Chip Stack", icon: "\uD83D\uDCB0", rarity: "common", weight: 20 },
   { id: "cc2", name: "The Lucky Duck", icon: "\uD83E\uDD86", rarity: "common", weight: 20 },
   { id: "cc3", name: "The Ice Walker", icon: "\uD83D\uDC27", rarity: "common", weight: 20 },
   { id: "cc4", name: "Loose Change", icon: "\uD83D\uDCB0", rarity: "common", weight: 20 },
@@ -1796,11 +1796,11 @@ function CardsView(props) {
       e("div", { className: "chest-scene" },
         revealed ? e(FortuneCard, { key: "reveal-" + revealKey, card: revealed.card, owned: true, big: true }) : e(TreasureChest, { opening: opening }),
         revealed ? (revealed.dupe
-          ? e("div", { className: "reveal-caption dupe" }, "Already had this one \u2014 Sal tossed in \uD83E\uDE99" + revealed.refund + " instead.")
+          ? e("div", { className: "reveal-caption dupe" }, "Already had this one \u2014 Sal tossed in \uD83D\uDCB0" + revealed.refund + " instead.")
           : e("div", { className: "reveal-caption" }, "New card! \u201C" + revealed.card.name + "\u201D added to your vault.")
         ) : e("div", { className: "reveal-caption idle" }, opening ? "Cracking it open\u2026" : "Open a chest for a random fortune card")
       ),
-      e("button", { className: "action-btn", disabled: opening || wallet < CHEST_PRICE, onClick: openChest }, opening ? "Opening\u2026" : ("Open a chest \u2014 \uD83E\uDE99" + CHEST_PRICE))
+      e("button", { className: "action-btn", disabled: opening || wallet < CHEST_PRICE, onClick: openChest }, opening ? "Opening\u2026" : ("Open a chest \u2014 \uD83D\uDCB0" + CHEST_PRICE))
     ),
     e("div", { className: "settings-card" },
       e("div", { className: "settings-row" }, e("span", null, "Cards collected"), e("span", null, ownedCount + " / " + CARDS.length))
@@ -1940,14 +1940,14 @@ function CrapsGame(props) {
         ) : null,
         bet > 0 ? e("div", { className: "pass-line" },
           e("span", { className: "pass-line-label" }, "PASS LINE"),
-          e("span", { className: "pass-line-chip" }, "\uD83E\uDE99" + fmt(bet))
+          e("span", { className: "pass-line-chip" }, "\uD83D\uDCB0" + fmt(bet))
         ) : null
       )
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that roll \u2014 refunded \uD83E\uDE99" + fmt(result.payout)) :
-      result.won ? ("\uD83C\uDF89 Winner! +\uD83E\uDE99" + fmt(result.payout)) :
-      ("Seven out \u2014 house wins" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + result.cashback + " cashback)" : ""))
+      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that roll \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
+      result.won ? ("\uD83C\uDF89 Winner! +\uD83D\uDCB0" + fmt(result.payout)) :
+      ("Seven out \u2014 house wins" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
     ) : null,
     phase === "betting" ? e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: maxWallet, disabled: rolling }) : null,
     (phase === "betting" || phase === "point") ? e("button", { className: "action-btn", disabled: rolling || (phase === "betting" && (bet <= 0 || bet > wallet)), onClick: roll }, rolling ? "Rolling\u2026" : (phase === "betting" ? "\uD83C\uDFB2 Shoot!" : "\uD83C\uDFB2 Roll it!")) : null,
@@ -2046,7 +2046,7 @@ function PlinkoGame(props) {
             Array.from({ length: pegCount }, function (_, i) { return e("div", { className: "plinko-peg", key: i }); })
           );
         }),
-        chipPos ? e("div", { className: "plinko-chip", style: { left: chipPos.left + "%", top: chipPos.top + "%" } }, "\uD83E\uDE99") : null
+        chipPos ? e("div", { className: "plinko-chip", style: { left: chipPos.left + "%", top: chipPos.top + "%" } }, "\uD83D\uDCB0") : null
       ),
       e("div", { className: "plinko-slots" },
         PLINKO_MULTS.map(function (m, i) {
@@ -2056,8 +2056,8 @@ function PlinkoGame(props) {
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
       result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered the rest \u2014 refunded in full") :
-      result.won ? ("\uD83C\uDF89 Landed " + result.mult + "\u00D7! +\uD83E\uDE99" + fmt(result.payout)) :
-      ("Landed " + result.mult + "\u00D7 \u2014 got \uD83E\uDE99" + fmt(result.payout) + " back" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + result.cashback + " cashback)" : ""))
+      result.won ? ("\uD83C\uDF89 Landed " + result.mult + "\u00D7! +\uD83D\uDCB0" + fmt(result.payout)) :
+      ("Landed " + result.mult + "\u00D7 \u2014 got \uD83D\uDCB0" + fmt(result.payout) + " back" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
     ) : null,
     e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: maxWallet, disabled: dropping }),
     e("button", { className: "action-btn", disabled: dropping || bet <= 0 || bet > wallet, onClick: drop }, dropping ? "Dropping\u2026" : "Drop the chip")
@@ -2269,11 +2269,11 @@ function BlackjackGame(props) {
       )
     ),
     ended ? e("div", { className: "result-banner " + (ended.result === "lose" ? "lose" : "win") },
-      ended.result === "insured" ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that hand \u2014 refunded \uD83E\uDE99" + fmt(ended.payout)) :
-      ended.result === "blackjack" ? ("\uD83C\uDFB4 Blackjack! +\uD83E\uDE99" + fmt(ended.payout)) :
-      ended.result === "win" ? ("\uD83C\uDF89 You win! +\uD83E\uDE99" + fmt(ended.payout)) :
-      ended.result === "push" ? (ended.marked ? ("\uD83C\uDFB4 Marked Deck push bonus! \uD83E\uDE99" + fmt(ended.payout)) : ("Push \u2014 bet returned (\uD83E\uDE99" + fmt(ended.payout) + ")")) :
-      ("Dealer wins" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + ended.cashback + " cashback)" : ""))
+      ended.result === "insured" ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that hand \u2014 refunded \uD83D\uDCB0" + fmt(ended.payout)) :
+      ended.result === "blackjack" ? ("\uD83C\uDFB4 Blackjack! +\uD83D\uDCB0" + fmt(ended.payout)) :
+      ended.result === "win" ? ("\uD83C\uDF89 You win! +\uD83D\uDCB0" + fmt(ended.payout)) :
+      ended.result === "push" ? (ended.marked ? ("\uD83C\uDFB4 Marked Deck push bonus! \uD83D\uDCB0" + fmt(ended.payout)) : ("Push \u2014 bet returned (\uD83D\uDCB0" + fmt(ended.payout) + ")")) :
+      ("Dealer wins" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + ended.cashback + " cashback)" : ""))
     ) : null,
     phase === "betting" ? e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: props.maxWallet || 0, disabled: false }) : null,
     phase === "betting" ? e("button", { className: "action-btn", disabled: bet <= 0 || bet > wallet, onClick: deal }, "Deal") : null,
@@ -2292,7 +2292,7 @@ const SLOT_SYMBOLS = [
   { id: "bell", sym: "\uD83D\uDD14", weight: 18, triple: 5, pair: 2 },
   { id: "gem", sym: "\uD83D\uDC8E", weight: 12, triple: 10, pair: 3 },
   { id: "seven", sym: "7\uFE0F\u20E3", weight: 7, triple: 20, pair: 6 },
-  { id: "coin", sym: "\uD83E\uDE99", weight: 3, triple: 60, pair: 15 },
+  { id: "coin", sym: "\uD83D\uDCB0", weight: 3, triple: 60, pair: 15 },
 ];
 function weightedSlotSymbol() {
   const total = SLOT_SYMBOLS.reduce(function (s, x) { return s + x.weight; }, 0);
@@ -2378,7 +2378,7 @@ function SlotsGame(props) {
 
   useEffect(function () { return function () { if (intervalRef.current) clearInterval(intervalRef.current); }; }, []);
 
-  const displayText = spinning ? "SPINNING\u2026" : (result ? (result.won ? (result.insured ? "COVERED" : "WIN \uD83E\uDE99" + fmt(result.payout)) : "TRY AGAIN") : "READY");
+  const displayText = spinning ? "SPINNING\u2026" : (result ? (result.won ? (result.insured ? "COVERED" : "WIN \uD83D\uDCB0" + fmt(result.payout)) : "TRY AGAIN") : "READY");
   const displayWin = !spinning && result && result.won;
 
   return e("div", { ref: boardRef },
@@ -2405,13 +2405,13 @@ function SlotsGame(props) {
         ),
         e("div", { className: "slot-tray" }),
         e("div", { className: "slot-feet" }, e("div", { className: "slot-foot" }), e("div", { className: "slot-foot" })),
-        e("div", { className: "slot-paytable" }, "\uD83E\uDE99\u00D760 \u00B7 7\uFE0F\u20E3\u00D720 \u00B7 \uD83D\uDC8E\u00D710 \u00B7 \uD83D\uDD14\u00D75 \u00B7 \uD83C\uDF4B\u00D73 \u00B7 \uD83C\uDF52\u00D72 \u2014 2 matching pays a smaller consolation")
+        e("div", { className: "slot-paytable" }, "\uD83D\uDCB0\u00D760 \u00B7 7\uFE0F\u20E3\u00D720 \u00B7 \uD83D\uDC8E\u00D710 \u00B7 \uD83D\uDD14\u00D75 \u00B7 \uD83C\uDF4B\u00D73 \u00B7 \uD83C\uDF52\u00D72 \u2014 2 matching pays a smaller consolation")
       )
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded \uD83E\uDE99" + fmt(result.payout)) :
-      result.won ? ((result.jackpot ? "\uD83D\uDCB0 JACKPOT! +\uD83E\uDE99" : (result.kind === "triple" ? "\uD83C\uDF89 Triple match! +\uD83E\uDE99" : "Pair match! +\uD83E\uDE99")) + fmt(result.payout)) :
-      ("No match \u2014 spin again" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83E\uDE99" + result.cashback + " cashback)" : ""))
+      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
+      result.won ? ((result.jackpot ? "\uD83D\uDCB0 JACKPOT! +\uD83D\uDCB0" : (result.kind === "triple" ? "\uD83C\uDF89 Triple match! +\uD83D\uDCB0" : "Pair match! +\uD83D\uDCB0")) + fmt(result.payout)) :
+      ("No match \u2014 spin again" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
     ) : null,
     e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: props.maxWallet || 0, disabled: spinning }),
     e("button", { className: "action-btn", disabled: spinning || bet <= 0 || bet > wallet, onClick: spin }, spinning ? "Spinning\u2026" : "Pull the lever")
@@ -2450,8 +2450,8 @@ function WishingWell(props) {
       tossing ? e("div", { className: "well-ripple" }) : null
     ),
     e("div", { className: "well-label" }, "Toss a coin, wish for a fresh start"),
-    e("div", { className: "well-sub" }, "Refills to \uD83E\uDE99 1,000 \u00B7 clears debt"),
-    message ? e("div", { className: "wish-message" }, "\uD83E\uDE99 " + message) : null
+    e("div", { className: "well-sub" }, "Refills to \uD83D\uDCB0 1,000 \u00B7 clears debt"),
+    message ? e("div", { className: "wish-message" }, "\uD83D\uDCB0 " + message) : null
   );
 }
 
@@ -2484,9 +2484,9 @@ function SettingsView(props) {
 
   return e("div", null,
     e("div", { className: "settings-card" },
-      e("div", { className: "settings-row" }, e("span", null, "Current chips"), e("span", null, "\uD83E\uDE99 " + fmt(wallet))),
+      e("div", { className: "settings-row" }, e("span", null, "Current chips"), e("span", null, "\uD83D\uDCB0 " + fmt(wallet))),
       e("div", { className: "settings-row" }, e("span", null, "High-roller status"), e("span", null, status.name)),
-      status.next ? e("div", { style: { fontSize: 11, fontWeight: 700, color: "var(--ink-soft)", marginTop: 2 } }, "Next: " + status.next.name + " at \uD83E\uDE99" + fmt(status.next.threshold) + " all-time high") : null,
+      status.next ? e("div", { style: { fontSize: 11, fontWeight: 700, color: "var(--ink-soft)", marginTop: 2 } }, "Next: " + status.next.name + " at \uD83D\uDCB0" + fmt(status.next.threshold) + " all-time high") : null,
       e("div", { className: "settings-row", style: { marginTop: 4, paddingTop: 10, borderTop: "1px solid var(--line, #eee)" } },
         e("span", null, "Sound effects"),
         e("button", { className: "stamp-btn", style: { borderColor: "var(--felt-deep)", color: "var(--felt-deep)" }, onClick: toggleSound }, soundEnabled ? "On \uD83D\uDD0A" : "Off \uD83D\uDD07")
@@ -2505,20 +2505,20 @@ function SettingsView(props) {
         e("div", { className: "speech-bubble" }, "Big Sal: " + line)
       ),
       e("div", { className: "alley-puddle" }),
-      debt > 0 ? e("div", { className: "debt-note" }, e("span", null, "You owe Big Sal"), e("span", null, "\uD83E\uDE99 " + fmt(debt))) : null,
+      debt > 0 ? e("div", { className: "debt-note" }, e("span", null, "You owe Big Sal"), e("span", null, "\uD83D\uDCB0 " + fmt(debt))) : null,
 
       e("div", { className: "alley-section-title" }, "Loans"),
       debt > 0 ? e("div", { style: { fontSize: 10.5, fontWeight: 700, color: "rgba(255,255,255,0.55)", textAlign: "center", marginBottom: 10 } }, "Big Sal's not floating you another loan while you're still into him.") : null,
       LOAN_OFFERS.map(function (o, i) {
         return e("div", { key: o.amount, className: "deal-card " + (i % 2 === 0 ? "tilt-l" : "tilt-r") + (debt > 0 ? " deal-locked" : "") },
           e("div", null,
-            e("div", { className: "loan-card-amt" }, "\uD83E\uDE99 " + fmt(o.amount)),
+            e("div", { className: "loan-card-amt" }, "\uD83D\uDCB0 " + fmt(o.amount)),
             e("div", { className: "loan-card-owe" }, "Pay back " + fmt(o.owe))
           ),
           e("button", { className: "stamp-btn", disabled: debt > 0, onClick: function () { takeLoan(o); } }, "Take it")
         );
       }),
-      debt > 0 ? e("button", { className: "action-btn", style: { marginTop: 4, marginBottom: 4 }, disabled: wallet < debt, onClick: payOff }, "Pay off debt (\uD83E\uDE99" + fmt(debt) + ")") : null,
+      debt > 0 ? e("button", { className: "action-btn", style: { marginTop: 4, marginBottom: 4 }, disabled: wallet < debt, onClick: payOff }, "Pay off debt (\uD83D\uDCB0" + fmt(debt) + ")") : null,
 
       e("div", { className: "alley-section-title", style: { marginTop: 16 } }, "Sal's Lucky Charms"),
       CHARMS.map(function (c) {
@@ -2540,7 +2540,7 @@ function SettingsView(props) {
           ),
           maxed
             ? e("span", { className: "charm-owned-badge" }, "MAX")
-            : e("button", { className: "stamp-btn", disabled: wallet < nextDef.price, onClick: function () { buyCharm(c.id); } }, (level > 0 ? "Upgrade " : "Buy ") + "\uD83E\uDE99" + fmt(nextDef.price))
+            : e("button", { className: "stamp-btn", disabled: wallet < nextDef.price, onClick: function () { buyCharm(c.id); } }, (level > 0 ? "Upgrade " : "Buy ") + "\uD83D\uDCB0" + fmt(nextDef.price))
         );
       }),
 
