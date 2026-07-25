@@ -46,11 +46,22 @@ body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smooth
   padding-top: env(safe-area-inset-top, 0px);
   box-shadow: 0 0 60px rgba(0,0,0,0.35);
 }
+.app.sal-aura::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 997;
+  box-shadow: inset 0 0 30px 4px rgba(245,197,66,0.22);
+  animation: aura-pulse 3.5s ease-in-out infinite;
+}
+@keyframes aura-pulse {
+  0%, 100% { box-shadow: inset 0 0 30px 4px rgba(245,197,66,0.18); }
+  50% { box-shadow: inset 0 0 48px 9px rgba(245,197,66,0.4); }
+}
 
 /* header */
 .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 12px; flex-shrink: 0; background: linear-gradient(180deg, var(--felt-dark), var(--felt-deep)); border-bottom: 4px solid var(--gold); }
-.wordmark { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold-bright); letter-spacing: -0.02em; display: flex; align-items: center; gap: 3px; text-shadow: 2px 2px 0 var(--red-deep); }
-.wordmark .dot { color: var(--red); text-shadow: none; }
+.wordmark { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold-bright); letter-spacing: -0.02em; display: flex; align-items: center; gap: 3px; text-shadow: 2px 2px 0 var(--red-deep); position: relative; overflow: hidden; background: linear-gradient(100deg, var(--gold-bright) 40%, #FFFFFF 50%, var(--gold-bright) 60%); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: wordmark-shine 5s ease-in-out infinite; }
+@keyframes wordmark-shine { 0%, 20% { background-position: 100% 0; } 60%, 100% { background-position: -60% 0; } }
+.wordmark .dot { color: var(--red); text-shadow: none; -webkit-text-fill-color: var(--red); background: none; }
+.wordmark .legacy-crown { -webkit-text-fill-color: initial; background: none; font-size: 15px; }
 .top-right { display: flex; align-items: center; gap: 8px; }
 
 .wallet-pill {
@@ -62,6 +73,23 @@ body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smooth
 }
 .wallet-pill.pop-win { animation: coin-pop-win 0.5s ease; }
 .wallet-pill.pop-lose { animation: coin-pop-lose 0.5s ease; }
+.coin-ico {
+  display: inline-block; width: 0.95em; height: 0.95em; border-radius: 50%; flex-shrink: 0;
+  background: radial-gradient(circle at 32% 26%, #FFF3C4, #F5C542 55%, #C89B2C 100%);
+  border: 0.07em solid #8A6A1C;
+  box-shadow: inset 0 0.06em 0.05em rgba(255,255,255,0.7), inset 0 -0.06em 0.05em rgba(0,0,0,0.3);
+  vertical-align: -0.14em; position: relative;
+}
+.coin-ico::after {
+  content: ''; position: absolute; inset: 20%; border-radius: 50%;
+  border: 0.055em solid rgba(138,106,28,0.5);
+  box-shadow: inset 0 0.03em 0.03em rgba(255,255,255,0.35);
+}
+.coin-ico.diamond {
+  background: radial-gradient(circle at 32% 26%, #FFFFFF, #B9F2FF 45%, #6FD4E8 80%, #3FA8C4 100%);
+  border-color: #2C7A94;
+}
+.coin-ico.diamond::after { border-color: rgba(44,122,148,0.55); box-shadow: inset 0 0.03em 0.03em rgba(255,255,255,0.6); }
 @keyframes coin-pop-win {
   0% { transform: scale(1); }
   30% { transform: scale(1.22) rotate(-4deg); }
@@ -104,6 +132,25 @@ body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smooth
 }
 .board-title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 13px; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin-bottom: 10px; text-shadow: 0 2px 0 rgba(0,0,0,0.2); }
 .corner-rivet { position: absolute; width: 11px; height: 11px; border-radius: 50%; background: var(--gold); border: 2px solid var(--ink); z-index: 2; animation: rivet-glint 3.2s ease-in-out infinite; }
+
+/* tier-reactive board treatment: the club gets flashier as you renovate */
+.app.tier-2 .board-card, .app.tier-3 .board-card {
+  box-shadow: var(--card-shadow), 0 0 18px 2px rgba(245,197,66,0.28);
+}
+.app.tier-4 .board-card, .app.tier-5 .board-card {
+  border-color: var(--gold); box-shadow: var(--card-shadow), 0 0 26px 5px rgba(245,197,66,0.5);
+  animation: trim-glow 2.6s ease-in-out infinite, neon-board-pulse 2.4s ease-in-out infinite;
+}
+@keyframes neon-board-pulse {
+  0%, 100% { box-shadow: var(--card-shadow), 0 0 20px 3px rgba(245,197,66,0.4); }
+  50% { box-shadow: var(--card-shadow), 0 0 34px 8px rgba(245,197,66,0.8); }
+}
+.app.tier-4 .board-title, .app.tier-5 .board-title {
+  color: var(--gold-bright); text-shadow: 0 0 8px rgba(245,197,66,0.8), 0 2px 0 rgba(0,0,0,0.3);
+}
+.app.tier-5 .board-card::before { border-color: rgba(255,224,138,0.8); animation: corner-twinkle 2s ease-in-out infinite; }
+.app.tier-3 .bulb, .app.tier-4 .bulb, .app.tier-5 .bulb { box-shadow: 0 0 6px 2px rgba(255,224,138,0.7); }
+.app.tier-5 .bulb { animation-duration: 0.7s; }
 .corner-rivet.tr, .corner-rivet.bl { animation-delay: 0.8s; }
 @keyframes rivet-glint { 0%,100% { box-shadow: none; } 50% { box-shadow: 0 0 6px 2px rgba(245,197,66,0.65); } }
 .corner-rivet.tl { top: 6px; left: 6px; } .corner-rivet.tr { top: 6px; right: 6px; }
@@ -113,6 +160,8 @@ body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smooth
 .lobby-hero { text-align: center; padding: 10px 8px 18px; }
 .lobby-hero-amount { font-family: 'Fredoka', sans-serif; font-size: 40px; font-weight: 700; color: var(--felt-deep); line-height: 1; }
 .lobby-hero-label { font-size: 12px; font-weight: 800; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+.lobby-empire-badge { display: inline-block; margin-top: 8px; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 11px; color: var(--felt-deep); background: rgba(20,107,58,0.12); border: 2px solid var(--felt-deep); border-radius: 10px; padding: 4px 10px; }
+.lobby-empire-badge .prestige-star-row { color: var(--gold-deep); text-shadow: none; font-size: 11px; }
 .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .game-card {
   border: 4px solid var(--ink); border-radius: 22px; padding: 16px 10px 14px; text-align: center; cursor: pointer;
@@ -190,6 +239,10 @@ body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smooth
 /* ===== Roulette ===== */
 .wheel-wrap { display: flex; justify-content: center; padding: 8px 0 14px; position: relative; }
 .wheel-rim { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 218px; height: 218px; border-radius: 50%; border: 6px solid var(--gold); box-shadow: 0 0 0 3px var(--ink), inset 0 0 0 3px var(--gold-bright); pointer-events: none; }
+.wheel-deflector-ring { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); width: 218px; height: 218px; pointer-events: none; z-index: 2; }
+.wheel-deflector { position: absolute; width: 6px; height: 6px; margin: -3px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFF3C4, var(--gold-bright) 60%, var(--gold-deep)); border: 1px solid var(--ink); box-shadow: 0 0 4px 1px rgba(255,224,138,0.6); }
+.roulette-history { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; margin-top: 4px; padding-bottom: 4px; }
+.roulette-history-chip { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--ink); display: flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 9px; animation: card-deal 0.25s ease; }
 .wheel-pointer { position: absolute; top: -4px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 16px; height: 16px; background: var(--gold-bright); border: 2px solid var(--ink); z-index: 3; }
 .wheel-svg { transition: transform 4s cubic-bezier(0.12, 0.75, 0.15, 1); }
 .bet-type-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
@@ -198,21 +251,29 @@ body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smooth
   font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 11px; text-transform: uppercase;
   background: var(--white); color: var(--ink); transition: transform 0.12s ease;
 }
-.bet-type-chip.active { background: var(--gold); color: var(--ink); }
+.bet-type-chip.active { background: var(--gold); color: var(--ink); position: relative; }
+.bet-type-chip.active::after { content: ''; position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFF3C4, #F5C542 55%, #C89B2C 100%); border: 1.5px solid var(--ink); box-shadow: 0 1px 0 rgba(0,0,0,0.35); }
 .bet-type-chip:active { transform: scale(0.94); }
 .number-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 10px; }
 .number-cell {
   aspect-ratio: 1; border-radius: 8px; border: 2px solid var(--ink); display: flex; align-items: center; justify-content: center;
   font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 11px; color: var(--white); cursor: pointer; transition: transform 0.1s ease;
 }
-.number-cell.active { outline: 3px solid var(--gold-bright); outline-offset: 1px; }
+.number-cell.active { outline: 3px solid var(--gold-bright); outline-offset: 1px; position: relative; }
+.number-cell.active::after { content: ''; position: absolute; top: -6px; right: -6px; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFF3C4, #F5C542 55%, #C89B2C 100%); border: 1.5px solid var(--ink); box-shadow: 0 1px 0 rgba(0,0,0,0.35); z-index: 2; }
 .number-cell:active { transform: scale(0.88); }
 
 /* ===== Duck race ===== */
 .race-track { background: linear-gradient(180deg, #1E9AA8, #146B76); border: 4px solid var(--ink); border-radius: 20px; padding: 10px; margin-bottom: 12px; position: relative; overflow: hidden; }
+.pond-decor { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.lily-pad { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #3FAE6E, #1D7A48); border: 1.5px solid rgba(0,0,0,0.25); opacity: 0.55; }
+.lily-pad::after { content: ''; position: absolute; top: 50%; left: 50%; width: 7px; height: 7px; background: inherit; filter: brightness(0.7); clip-path: polygon(0 0, 100% 50%, 0 100%); transform: translate(-15%, -50%); }
 .lane { position: relative; height: 46px; border-bottom: 2px dashed rgba(255,255,255,0.3); display: flex; align-items: center; }
 .lane:last-child { border-bottom: none; }
 .finish-flag { position: absolute; right: 6px; top: 0; bottom: 0; width: 4px; background: repeating-linear-gradient(180deg, var(--gold-bright) 0 6px, var(--ink) 6px 12px); }
+.finish-banner { position: absolute; top: -2px; right: 4px; width: 22px; height: 14px;
+  background: repeating-conic-gradient(#fff 0deg 90deg, #2B1B12 90deg 180deg); background-size: 8px 8px;
+  border: 1.5px solid var(--ink); border-radius: 2px; z-index: 1; box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
 .duck-slot { position: absolute; transition: left 0.12s linear; }
 
 /* duck sprite (pure CSS art) */
@@ -495,6 +556,230 @@ body { font-family: 'Nunito', sans-serif; color: var(--ink); -webkit-font-smooth
 
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
 
+/* ===== Empire ===== */
+.prestige-star-row { color: var(--gold-bright); letter-spacing: 0.05em; font-size: 13px; text-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+.empire-scene {
+  position: relative; overflow: hidden; border-radius: 20px; border: 3px solid #000;
+  background: linear-gradient(180deg, var(--felt-deep), var(--felt-dark));
+  min-height: 220px; margin-bottom: 12px;
+}
+.empire-section-label {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--ink-soft); margin: 4px 2px 8px;
+}
+.empire-info-card {
+  background: linear-gradient(180deg, var(--felt-deep), var(--felt-dark)); border: 3px solid #000; border-radius: 18px;
+  padding: 16px; text-align: center; margin-bottom: 6px;
+}
+
+/* ----- Empire decor: per-tier signature elements ----- */
+.ed-layer { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.ed-bulb-wire { position: absolute; width: 2px; height: 24px; background: #050505; left: 50%; top: 0; transform: translateX(-50%); }
+.ed-bulb { position: absolute; width: 15px; height: 18px; border-radius: 50% 50% 45% 45%; left: 50%; top: 22px; transform: translateX(-50%);
+  background: radial-gradient(circle at 35% 30%, #FFF3C4, #FFD24C 55%, #C98B12); box-shadow: 0 0 16px 6px rgba(255,210,76,0.55); }
+.ed-bulb.dim { box-shadow: 0 0 8px 3px rgba(255,210,76,0.3); opacity: 0.85; }
+.ed-brick { position: absolute; inset: 0; opacity: 0.35;
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.28) 0 2px, transparent 2px 20px), repeating-linear-gradient(90deg, rgba(0,0,0,0.2) 0 2px, transparent 2px 40px); }
+.ed-graffiti { position: absolute; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 10px; opacity: 0.45; }
+.ed-puddle { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 60px; height: 10px; border-radius: 50%; background: radial-gradient(ellipse, rgba(140,170,200,0.28), transparent 72%); }
+
+.ed-ribbon { position: absolute; top: 10px; left: 50%; transform: translateX(-50%) rotate(-2deg); background: var(--red); color: var(--white);
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 9px; padding: 4px 12px; border: 2px solid #000; border-radius: 3px;
+  white-space: nowrap; box-shadow: 2px 2px 0 rgba(0,0,0,0.35); }
+.ed-plant-pot { position: absolute; bottom: 6px; left: 12px; width: 18px; height: 15px; background: #8A5A2E; border: 2px solid #000; border-radius: 0 0 5px 5px; }
+.ed-plant-leaf { position: absolute; bottom: 17px; left: 14px; width: 15px; height: 15px; background: #2FBE72; border-radius: 60% 0 60% 0; border: 1.5px solid #000; }
+
+.ed-string-bulb { position: absolute; width: 9px; height: 11px; border-radius: 50%; top: 8px;
+  background: radial-gradient(circle at 35% 30%, #FFF3C4, #FFD24C 55%, #C98B12); box-shadow: 0 0 8px 3px rgba(255,210,76,0.5); }
+.ed-curtain { position: absolute; top: -6px; width: 40px; height: 46px; background: radial-gradient(ellipse at top, var(--velvet), #3A0D1E);
+  border-radius: 0 0 50% 50%; border: 2px solid #000; }
+.ed-curtain.left { left: -6px; } .ed-curtain.right { right: -6px; transform: scaleX(-1); }
+
+.ed-chand-wire { position: absolute; width: 2px; height: 14px; left: 50%; top: 0; transform: translateX(-50%); background: #050505; }
+.ed-chand-bulb { position: absolute; width: 9px; height: 11px; border-radius: 50%; top: 12px;
+  background: radial-gradient(circle at 35% 30%, #FFF3C4, #FFD24C 55%, #C98B12); box-shadow: 0 0 10px 4px rgba(255,210,76,0.55); }
+.ed-floor { position: absolute; bottom: 0; left: 0; right: 0; height: 12px;
+  background: repeating-linear-gradient(45deg, rgba(245,197,66,0.28) 0 8px, transparent 8px 16px); border-top: 2px solid rgba(245,197,66,0.4); }
+.ed-floor.marble { height: 16px; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.14) 0 10px, rgba(245,197,66,0.22) 10px 20px); }
+.ed-pillar { position: absolute; top: 0; bottom: 12px; width: 7px; background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-deep)); border: 1.5px solid #000; }
+.ed-pillar.left { left: 3px; } .ed-pillar.right { right: 3px; }
+.ed-pillar.thick { width: 11px; }
+
+.ed-stanchion { position: absolute; bottom: 16px; width: 5px; height: 20px; background: var(--gold); border: 1.5px solid #000; border-radius: 2px; }
+.ed-stanchion.left { left: 26px; } .ed-stanchion.right { right: 26px; }
+.ed-rope { position: absolute; bottom: 33px; left: 31px; right: 31px; height: 3px; background: var(--red); border-radius: 2px; }
+
+.ed-skyline { position: absolute; bottom: 0; left: 0; right: 0; height: 38%; display: flex; align-items: flex-end; gap: 3px; padding: 0 4px; }
+.ed-building { background: #0D1526; border-top: 2px solid rgba(255,255,255,0.12); flex: 1; position: relative; }
+.ed-window { position: absolute; width: 3px; height: 3px; background: rgba(255,224,138,0.75); }
+.ed-star { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; animation: corner-twinkle 2.4s ease-in-out infinite; }
+.ed-railing { position: absolute; bottom: 38%; left: 8px; right: 8px; height: 2px; background: rgba(200,230,255,0.35); }
+
+.ed-firework { position: absolute; width: 4px; height: 4px; border-radius: 50%; animation: firework-burst 2.6s ease-out infinite; }
+@keyframes firework-burst { 0% { transform: scale(0); opacity: 1; } 55% { opacity: 0.75; } 100% { transform: scale(13); opacity: 0; } }
+
+.ed-patron { position: absolute; bottom: 10px; width: 12px; }
+.ed-patron-head { width: 8px; height: 8px; border-radius: 50%; background: rgba(0,0,0,0.38); margin: 0 auto; }
+.ed-patron-body { width: 12px; height: 15px; border-radius: 6px 6px 2px 2px; background: rgba(0,0,0,0.38); margin-top: -1px; }
+.ed-patron.fancy .ed-patron-head::after { content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%); width: 10px; height: 4px; background: rgba(0,0,0,0.38); border-radius: 2px 2px 0 0; }
+
+.ed-cat { position: absolute; bottom: 5px; left: 62%; width: 16px; height: 9px; }
+.ed-cat-body { position: absolute; bottom: 0; width: 14px; height: 7px; background: rgba(0,0,0,0.4); border-radius: 40% 40% 20% 20%; }
+.ed-cat-tail { position: absolute; bottom: 4px; right: -3px; width: 8px; height: 3px; background: rgba(0,0,0,0.4); border-radius: 3px; transform: rotate(-25deg); }
+.ed-cat-ear { position: absolute; top: -3px; width: 4px; height: 4px; background: rgba(0,0,0,0.4); clip-path: polygon(50% 0, 0 100%, 100% 100%); }
+.ed-cat-ear.l { left: 1px; } .ed-cat-ear.r { left: 8px; }
+
+.ed-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 16px; background: linear-gradient(180deg, #4A2E1A, #2E1B10); border-top: 2px solid var(--gold-deep); }
+.ed-bottle { position: absolute; bottom: 14px; width: 4px; height: 10px; background: var(--gold); border-radius: 1px 1px 0 0; opacity: 0.8; }
+
+.ed-wheel-accent { position: absolute; top: 8%; right: 8%; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--gold); opacity: 0.5; }
+.ed-wheel-accent::after { content: ''; position: absolute; inset: 45% 0; height: 10%; background: var(--gold); } 
+.ed-wheel-accent::before { content: ''; position: absolute; inset: 0 45%; width: 10%; background: var(--gold); }
+
+.ed-champagne { position: absolute; bottom: 12px; left: 10%; }
+.ed-champagne-glass { width: 6px; height: 6px; border-radius: 0 0 50% 50%; background: rgba(255,224,138,0.55); border: 1px solid var(--gold); margin: 1px auto; }
+
+.ed-moon { position: absolute; top: 8%; right: 10%; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFFDF0, #E8DCC0); box-shadow: 0 0 16px 4px rgba(255,253,240,0.4); }
+
+.empire-tier-badge {
+  display: inline-block; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink); background: var(--gold); border: 2px solid var(--ink);
+  border-radius: 10px; padding: 4px 10px; margin-bottom: 8px;
+}
+.empire-tier-name { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 22px; color: var(--white); text-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+.empire-tier-desc { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); margin-top: 4px; max-width: 260px; margin-left: auto; margin-right: auto; line-height: 1.4; }
+.empire-ladder { display: flex; justify-content: center; gap: 6px; margin: 16px 0; }
+.empire-rung {
+  width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 11px;
+  color: rgba(255,255,255,0.5); transition: all 0.3s ease;
+}
+.empire-rung.done { background: var(--gold); border-color: var(--ink); color: var(--ink); }
+.empire-rung.current { box-shadow: 0 0 10px 3px rgba(245,197,66,0.7); transform: scale(1.15); animation: point-pulse 1.6s ease-in-out infinite; }
+.empire-next-card { background: rgba(0,0,0,0.22); border: 2px dashed rgba(255,255,255,0.3); border-radius: 14px; padding: 14px; margin-top: 6px; position: relative; overflow: hidden; }
+.empire-next-card::before {
+  content: ''; position: absolute; top: 0; left: -70%; width: 40%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.18), transparent); transform: skewX(-20deg);
+  animation: shine-sweep 3.4s ease-in-out infinite; pointer-events: none;
+}
+.empire-next-name { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 14px; color: var(--gold-bright); }
+.empire-next-desc { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.65); margin: 4px 0 10px; line-height: 1.4; }
+.empire-maxed { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 13px; color: var(--gold-bright); margin-top: 10px; }
+
+/* ===== Casino Building Exterior ===== */
+.empire-building-scene {
+  position: relative; overflow: hidden; border-radius: 20px; border: 3px solid #000;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 100%, rgba(245,197,66,0.22), transparent 65%),
+    linear-gradient(180deg, #1A1030 0%, #140C24 35%, #0A0814 70%, #050308 100%);
+  padding: 24px 10px 0; text-align: center;
+  min-height: 62vh; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+}
+.eb-star { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; animation: corner-twinkle 2.6s ease-in-out infinite; }
+.cb-wrap { display: flex; flex-direction: column; align-items: center; position: relative; transform: scale(1.35); transform-origin: bottom center; margin-bottom: 6px; }
+.cb-door-glow { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); width: 70px; height: 40px; border-radius: 50%; background: radial-gradient(ellipse, rgba(255,201,110,0.5), transparent 70%); z-index: 0; pointer-events: none; }
+.cb-spotlight { position: absolute; bottom: 60px; width: 3px; height: 110px; background: linear-gradient(0deg, rgba(255,255,255,0.55), transparent); z-index: 0; }
+.cb-spotlight.left { left: -14px; transform: rotate(-18deg); transform-origin: bottom; animation: spotlight-sway 4s ease-in-out infinite; }
+.cb-spotlight.right { right: -14px; transform: rotate(18deg); transform-origin: bottom; animation: spotlight-sway 4s ease-in-out infinite reverse; }
+@keyframes spotlight-sway { 0%,100% { opacity: 0.5; } 50% { opacity: 0.9; } }
+.cb-sign-wrap { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; position: relative; z-index: 2; }
+.cb-marquee { display: flex; gap: 2px; padding: 5px 8px; border: 2.5px solid #000; border-radius: 4px; background: #1B1420; }
+.cb-letter { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 13px; width: 15px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 2px; }
+.cb-marquee-broken .cb-letter, .cb-marquee-fixed .cb-letter { background: #3A2E1A; color: #E8D9B5; border: 1px solid #000; }
+.cb-marquee-broken .cb-letter.off { background: #17130E; color: #45392A; box-shadow: none; }
+.cb-marquee-broken .cb-letter:not(.off) { animation: bulb-sputter 3s ease-in-out infinite; }
+@keyframes bulb-sputter { 0%, 88%, 100% { opacity: 1; } 90% { opacity: 0.35; } 92% { opacity: 1; } 94% { opacity: 0.5; } }
+.cb-marquee-lit .cb-letter { background: var(--gold); color: var(--ink); box-shadow: 0 0 8px 2px rgba(245,197,66,0.5); }
+.cb-marquee-marquee .cb-letter { background: var(--gold-bright); color: var(--ink); box-shadow: 0 0 12px 3px rgba(245,197,66,0.7); animation: point-pulse 1.8s ease-in-out infinite; }
+.cb-marquee-marquee-gold .cb-letter { background: linear-gradient(180deg, #FFE9A8, var(--gold-deep)); color: var(--ink); box-shadow: 0 0 16px 4px rgba(245,197,66,0.8); animation: point-pulse 1.5s ease-in-out infinite; border-color: var(--gold-bright); }
+.cb-marquee-neon { background: #0A0812; }
+.cb-marquee-neon .cb-letter.neon { background: transparent; border: none; color: #fff; text-shadow: 0 0 6px #FF3FA4, 0 0 14px #FF3FA4, 0 0 22px #FF3FA4; font-size: 15px; animation: neon-flicker 2.6s ease-in-out infinite; }
+@keyframes neon-flicker { 0%, 92%, 100% { opacity: 1; } 94% { opacity: 0.6; } 96% { opacity: 1; } 98% { opacity: 0.75; } }
+.cb-building { background: linear-gradient(180deg, #6B5236, #3D2C18); border: 3px solid #000; border-radius: 6px 6px 0 0; display: flex; flex-direction: column-reverse; overflow: hidden; position: relative; z-index: 1; box-shadow: inset 0 0 20px rgba(0,0,0,0.4); }
+.cb-building.rich { border-color: var(--gold-deep); box-shadow: inset 0 0 20px rgba(0,0,0,0.4), 0 0 18px 2px rgba(245,197,66,0.35); }
+.cb-floor { display: flex; justify-content: center; gap: 6px; padding: 6px 8px; border-top: 1px solid rgba(245,197,66,0.35); }
+.cb-roof-lights { display: flex; justify-content: center; gap: 5px; padding: 3px 0; }
+.cb-roof-bulb { width: 5px; height: 5px; border-radius: 50%; background: radial-gradient(circle, #FFE9A8, #C89B2C); box-shadow: 0 0 5px 2px rgba(255,224,138,0.6); animation: bulb-chase 1.4s linear infinite; }
+.cb-window { width: 10px; height: 12px; background: #10121A; border: 1px solid #000; }
+.cb-window.lit { background: radial-gradient(circle, #FFE9A8, #C89B2C); box-shadow: 0 0 4px 1px rgba(255,224,138,0.55); }
+.cb-ground { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.cb-awning { width: 60px; height: 9px; background: repeating-linear-gradient(90deg, var(--red) 0 8px, var(--white) 8px 16px); border: 2px solid #000; border-radius: 2px 2px 0 0; }
+.cb-canopy { width: 90px; height: 8px; background: var(--gold); border: 2px solid #000; }
+.cb-carpet { width: 26px; height: 14px; background: var(--red); border: 1.5px solid #000; border-top: none; }
+.cb-door { width: 18px; height: 22px; background: linear-gradient(180deg, #3A2410, #1B1008); border: 2px solid var(--gold-deep); border-radius: 3px 3px 0 0; position: relative; z-index: 1; }
+.cb-mat { width: 26px; height: 6px; background: #8A5A2E; border: 1.5px solid #000; border-radius: 2px; margin-bottom: -2px; }
+.cb-crack { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 140px; height: 6px; }
+.cb-crack::before, .cb-crack::after { content: ''; position: absolute; height: 1.5px; background: rgba(0,0,0,0.4); }
+.cb-crack::before { width: 60px; left: 0; top: 2px; transform: rotate(4deg); }
+.cb-crack::after { width: 50px; right: 0; top: 0; transform: rotate(-6deg); }
+.cb-junker { position: absolute; bottom: 2px; left: -40px; width: 30px; height: 12px; }
+.cb-junker-body { position: absolute; bottom: 4px; width: 30px; height: 8px; background: #6B2E2E; border: 1.5px solid #000; border-radius: 4px 4px 1px 1px; opacity: 0.8; }
+.cb-junker-wheel { position: absolute; bottom: 0; width: 6px; height: 6px; border-radius: 50%; background: #1B1420; border: 1px solid #000; }
+.cb-junker-wheel.l { left: 3px; } .cb-junker-wheel.r { right: 3px; }
+
+/* ===== Prestige Skill Tree ===== */
+.tree-header { text-align: center; padding: 10px 0 18px; position: relative; }
+.tree-title {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 25px; display: inline-block;
+  background: linear-gradient(100deg, var(--gold-bright) 35%, #FFFFFF 50%, var(--gold-bright) 65%);
+  background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(0,0,0,0.4));
+  animation: wordmark-shine 3.2s ease-in-out infinite;
+}
+.tree-subtitle { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.65); margin-top: 4px; }
+.tree-star-count { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 17px; color: var(--gold-bright); margin-top: 8px; text-shadow: 0 0 10px rgba(245,197,66,0.7); animation: point-pulse-text 1.8s ease-in-out infinite; }
+@keyframes point-pulse-text { 0%,100% { text-shadow: 0 0 8px rgba(245,197,66,0.5); } 50% { text-shadow: 0 0 16px rgba(245,197,66,0.95); } }
+.tree-progress { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 6px; }
+.tree-progress-bar { width: 110px; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.25); overflow: hidden; }
+.tree-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright)); transition: width 0.4s ease; }
+.tree-progress-label { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 10.5px; color: rgba(255,255,255,0.7); }
+.tree-scene {
+  position: relative; overflow: hidden; border-radius: 20px; border: 3px solid #000;
+  background: linear-gradient(180deg, #2E2154, #1B1730); padding: 6px 10px 18px;
+}
+.tree-sparkle-field { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.tree-sparkle { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #FFE9A8; box-shadow: 0 0 4px 1px rgba(255,233,168,0.8); animation: corner-twinkle 2.3s ease-in-out infinite; }
+.tree-branches { display: flex; justify-content: space-around; gap: 2px; position: relative; z-index: 1; }
+.tree-branch { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 0; }
+.tree-branch-name { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 8.5px; color: rgba(255,255,255,0.7); text-align: center; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 8px; line-height: 1.2; padding: 0 1px; }
+.tree-node {
+  width: 52px; height: 52px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border: 2.5px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); cursor: pointer; position: relative; overflow: hidden;
+  transition: transform 0.15s ease; flex-shrink: 0;
+}
+.tree-node-icon { font-size: 18px; opacity: 0.35; position: relative; z-index: 1; }
+.tree-node-cost { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 9px; color: rgba(255,255,255,0.5); margin-top: 1px; position: relative; z-index: 1; }
+.tree-node.available { background: rgba(245,197,66,0.18); border-color: var(--gold); animation: point-pulse 1.6s ease-in-out infinite; cursor: pointer; }
+.tree-node.available .tree-node-icon { opacity: 1; }
+.tree-node.available .tree-node-cost { color: var(--gold-bright); }
+.tree-node.available::before {
+  content: ''; position: absolute; top: 0; left: -80%; width: 45%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.65), transparent); transform: skewX(-20deg);
+  animation: shine-sweep 2.2s ease-in-out infinite; z-index: 0;
+}
+.tree-node.owned { background: linear-gradient(180deg, var(--gold-bright), var(--gold-deep)); border-color: var(--ink); box-shadow: 0 0 10px 3px rgba(245,197,66,0.55); }
+.tree-node.owned .tree-node-icon { opacity: 1; }
+.tree-node.owned .tree-node-cost { display: none; }
+.tree-node.owned::before {
+  content: ''; position: absolute; top: 0; left: -80%; width: 35%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-20deg);
+  animation: shine-sweep 3.6s ease-in-out infinite; z-index: 0;
+}
+.tree-node.locked { cursor: not-allowed; opacity: 0.55; }
+.tree-node.just-bought { animation: node-pop 0.6s cubic-bezier(.2,1.7,.4,1); }
+@keyframes node-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.4) rotate(-6deg); box-shadow: 0 0 24px 10px rgba(245,197,66,0.9); }
+  65% { transform: scale(0.92) rotate(3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.tree-line { width: 3px; height: 22px; background: rgba(255,255,255,0.2); transition: background 0.4s ease; }
+.tree-line.lit { background: var(--gold); box-shadow: 0 0 6px 1px rgba(245,197,66,0.6); }
+.tree-node-name { font-size: 7.5px; font-weight: 800; color: rgba(255,255,255,0.7); text-align: center; margin-top: 4px; max-width: 62px; line-height: 1.15; }
+.tree-node-tooltip { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.55); text-align: center; margin-top: 2px; max-width: 64px; line-height: 1.2; min-height: 30px; }
+.tree-continue-btn { margin-top: 16px; }
+.legacy-crown { margin-left: 2px; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.4)); animation: medallion-bob 3s ease-in-out infinite; display: inline-block; }
+
 /* ===== Craps ===== */
 .craps-table { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 10px 0; }
 .craps-point-track { display: flex; gap: 5px; background: rgba(0,0,0,0.22); border: 2px solid rgba(0,0,0,0.35); border-radius: 10px; padding: 6px; }
@@ -731,6 +1016,9 @@ function loadJSON(key, fallback) {
 }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 function fmt(n) { return Math.round(n).toLocaleString(); }
+function CoinIcon() { return e("span", { className: "coin-ico" + (DIAMOND_COIN ? " diamond" : "") }); }
+function coinAmt(amount) { return [e(CoinIcon, null), " " + fmt(amount)]; }
+function coinNum(amount) { return [e(CoinIcon, null), " " + amount]; }
 function pct(v) { return v + "%"; }
 function todayStr() {
   const d = new Date();
@@ -794,6 +1082,7 @@ function playSweep(freqStart, freqEnd, duration, type, volume, delay) {
 }
 const Sound = {
   click: function () { playTone(700, 0.05, "square", 0.06); },
+  navClick: function () { playTone(600, 0.04, "sine", 0.045); },
   chip: function () { playTone(920, 0.06, "triangle", 0.09); },
   clear: function () { playTone(400, 0.05, "square", 0.06); },
   cardFlip: function () { playTone(280, 0.035, "square", 0.06); playTone(520, 0.035, "square", 0.05, 0.03); },
@@ -806,15 +1095,32 @@ const Sound = {
   hop: function () { playTone(700, 0.06, "triangle", 0.08); },
   drop: function () { playSweep(700, 200, 0.3, "sine", 0.07); },
   bounce: function () { playTone(500 + Math.random() * 200, 0.03, "triangle", 0.05); },
-  win: function () { [523, 659, 784].forEach(function (f, i) { playTone(f, 0.15, "triangle", 0.1, i * 0.08); }); },
-  bigWin: function () { [523, 659, 784, 1047].forEach(function (f, i) { playTone(f, 0.18, "triangle", 0.13, i * 0.09); }); },
+  win: function () {
+    [523, 659, 784].forEach(function (f, i) { playTone(f, 0.15, "triangle", 0.1, i * 0.08); });
+    playTone(1046, 0.12, "sine", 0.04, 0.16);
+  },
+  bigWin: function () {
+    [523, 659, 784, 1047].forEach(function (f, i) { playTone(f, 0.18, "triangle", 0.13, i * 0.09); });
+    playTone(1319, 0.22, "sine", 0.07, 0.32);
+  },
   jackpot: function () {
     [523, 659, 784, 1047, 1319].forEach(function (f, i) { playTone(f, 0.2, "triangle", 0.14, i * 0.09); });
-    playTone(1568, 0.6, "sine", 0.1, 0.55);
+    [1568, 1976, 2093].forEach(function (f) { playTone(f, 0.7, "sine", 0.06, 0.55); });
+  },
+  prestige: function () {
+    [392, 523, 659, 784, 1047, 1319].forEach(function (f, i) { playTone(f, 0.22, "triangle", 0.13, i * 0.1); });
+    [523, 659, 784, 1047].forEach(function (f) { playTone(f, 1.1, "sine", 0.07, 0.68); });
+    playTone(1568, 1.0, "sine", 0.09, 0.68);
+  },
+  renovate: function () {
+    playTone(140, 0.06, "square", 0.1, 0);
+    playTone(140, 0.06, "square", 0.1, 0.14);
+    playTone(140, 0.07, "square", 0.11, 0.28);
+    [659, 880, 1108].forEach(function (f, i) { playTone(f, 0.22, "triangle", 0.11, 0.44 + i * 0.09); });
   },
   lose: function () { playTone(320, 0.14, "sawtooth", 0.07); playTone(220, 0.22, "sawtooth", 0.06, 0.11); },
   crash: function () { playSweep(500, 60, 0.4, "sawtooth", 0.12); playTone(80, 0.3, "square", 0.08, 0.05); },
-  coin: function () { playTone(1200, 0.08, "sine", 0.09); playTone(1600, 0.06, "sine", 0.07, 0.05); },
+  coin: function () { playTone(1200, 0.08, "sine", 0.09); playTone(1600, 0.06, "sine", 0.07, 0.05); playTone(2000, 0.08, "sine", 0.04, 0.09); },
   wishSplash: function () { playSweep(600, 150, 0.4, "sine", 0.08); },
 };
 
@@ -838,6 +1144,8 @@ const CHIP_VALUES = [
   { v: 50000, threshold: 250000 },
   { v: 100000, threshold: 750000 },
   { v: 250000, threshold: 750000 },
+  { v: 500000, threshold: 2500000 },
+  { v: 1000000, threshold: 2500000 },
 ];
 const CHIP_DENOMS = CHIP_VALUES.map(function (cv, i) {
   const style = CHIP_RING_CYCLE[i % CHIP_RING_CYCLE.length];
@@ -851,6 +1159,7 @@ const BANKROLL_LEVELS = [
   { threshold: 75000, name: "Whale" },
   { threshold: 250000, name: "Legend" },
   { threshold: 750000, name: "Mythic" },
+  { threshold: 2500000, name: "Icon" },
 ];
 function bankrollLevel(maxWallet) {
   let idx = 0;
@@ -860,6 +1169,124 @@ function bankrollLevel(maxWallet) {
   const current = BANKROLL_LEVELS[idx];
   const next = BANKROLL_LEVELS[idx + 1] || null;
   return { index: idx, name: current.name, next: next };
+}
+
+/* ---------- empire (visible cosmetic progression) ---------- */
+const EMPIRE_TIERS = [
+  {
+    id: 0, name: "The Back Alley", desc: "A busted sign, a cracked lot, and a lot of ambition.", cost: 0,
+    vars: {}
+  },
+  {
+    id: 1, name: "Fresh Coat", desc: "New paint, a brighter bulb, a sign that actually lights up.", cost: 10000,
+    vars: { "--felt": "#1D8449", "--felt-deep": "#155C36", "--felt-dark": "#0A3A21", "--gold": "#FFD24C", "--gold-deep": "#D4A62E", "--paper": "#FFF6E0" }
+  },
+  {
+    id: 2, name: "The Lounge", desc: "Velvet rope out front, a real bar in back.", cost: 75000,
+    vars: { "--felt": "#0F5C38", "--felt-deep": "#0A4028", "--felt-dark": "#062A1A", "--red": "#8B2252", "--red-deep": "#5C1638", "--velvet": "#6B1F42", "--gold": "#F0C040", "--gold-deep": "#C08F26" }
+  },
+  {
+    id: 3, name: "The Floor", desc: "Chandeliers. A real casino floor. Sal's very proud.", cost: 400000,
+    vars: { "--felt": "#0D6B42", "--felt-deep": "#094A2D", "--felt-dark": "#052D1C", "--gold": "#FFD966", "--gold-deep": "#D4A62E", "--gold-bright": "#FFF0B8", "--paper": "#FFF8E8", "--red": "#B01C3A", "--red-deep": "#7A1128" }
+  },
+  {
+    id: 4, name: "VIP Room", desc: "Black and gold everywhere. Members only, technically.", cost: 2000000,
+    vars: { "--felt": "#1A1420", "--felt-deep": "#100C15", "--felt-dark": "#08060A", "--gold": "#FFDD70", "--gold-deep": "#C9971A", "--gold-bright": "#FFF0C0", "--red": "#A01830", "--red-deep": "#6E0F21", "--velvet": "#4A1030" }
+  },
+  {
+    id: 5, name: "The Penthouse", desc: "Skyline views. You've made it. Sal's taking notes.", cost: 10000000,
+    vars: { "--felt": "#16213E", "--felt-deep": "#0D1526", "--felt-dark": "#070B15", "--gold": "#FFE29A", "--gold-deep": "#D4AF37", "--gold-bright": "#FFF3D0", "--red": "#C4304A", "--red-deep": "#861F32", "--paper": "#FFF8EC" }
+  },
+];
+const PRESTIGE_DISCOUNT_PER_STAR = 0.03;
+const PRESTIGE_DISCOUNT_CAP = 0.6;
+function empireTierCost(tierId, stars) {
+  const tier = EMPIRE_TIERS[tierId];
+  if (!tier) return 0;
+  const discount = Math.min(PRESTIGE_DISCOUNT_CAP, (stars || 0) * PRESTIGE_DISCOUNT_PER_STAR);
+  return Math.round(tier.cost * (1 - discount));
+}
+
+const PRESTIGE_TREE = [
+  {
+    branch: "bankroll", branchName: "The Bankroll", branchIcon: "\uD83E\uDE99",
+    nodes: [
+      { id: "grandReopening", name: "Grand Reopening", icon: "\uD83C\uDF89", cost: 3, desc: "Reset starts you with 2,500 chips instead of 1,000.", requires: null },
+      { id: "nestEgg", name: "Sal's Nest Egg", icon: "\uD83E\uDD5A", cost: 10, desc: "Reset starts you with 8,000 chips instead of 2,500.", requires: "grandReopening" },
+      { id: "vault", name: "The Vault", icon: "\uD83C\uDFE6", cost: 30, desc: "Reset starts you with 20,000 chips instead of 8,000.", requires: "nestEgg" },
+    ]
+  },
+  {
+    branch: "building", branchName: "The Building", branchIcon: "\uD83C\uDFDB\uFE0F",
+    nodes: [
+      { id: "salsTrust", name: "Sal's Trust", icon: "\uD83E\uDD1D", cost: 6, desc: "Reset skips straight to Fresh Coat instead of the bare alley.", requires: null },
+      { id: "foundation", name: "Foundation Poured", icon: "\uD83C\uDFD7\uFE0F", cost: 14, desc: "Reset skips straight to The Lounge instead.", requires: "salsTrust" },
+      { id: "blueprint", name: "Empire Blueprint", icon: "\uD83D\uDCD0", cost: 40, desc: "Reset skips straight to The Floor instead.", requires: "foundation" },
+    ]
+  },
+  {
+    branch: "shine", branchName: "The Shine", branchIcon: "\u2728",
+    nodes: [
+      { id: "diamondCoin", name: "Diamond Coin", icon: "\uD83D\uDC8E", cost: 10, desc: "Every coin in the club gets a shimmering diamond finish.", requires: null },
+      { id: "legacy", name: "Sal's Legacy", icon: "\uD83D\uDC51", cost: 22, desc: "A gold founder's crown appears next to your name, forever.", requires: "diamondCoin" },
+      { id: "fireworks", name: "Founder's Fireworks", icon: "\uD83C\uDF86", cost: 35, desc: "Permanent sparks over the club, no matter which tier you're rebuilding from.", requires: "legacy" },
+      { id: "aura", name: "Sal's Aura", icon: "\uD83C\uDF1F", cost: 60, desc: "A permanent gold shimmer follows you everywhere in the app, not just the club.", requires: "fireworks" },
+    ]
+  },
+  {
+    branch: "regulars", branchName: "The Regulars", branchIcon: "\uD83C\uDF7A",
+    nodes: [
+      { id: "blackBook", name: "Sal's Black Book", icon: "\uD83D\uDCD3", cost: 8, desc: "Reset starts you with Ghost Stake already owned at level 1.", requires: null },
+      { id: "houseSpecial", name: "The House Special", icon: "\uD83C\uDF7D\uFE0F", cost: 18, desc: "Reset also starts you with Gold Tooth already owned at level 1.", requires: "blackBook" },
+      { id: "fullConfidence", name: "Sal's Full Confidence", icon: "\uD83E\uDD1F", cost: 35, desc: "Reset also starts you with Cashback Ring already owned at level 1.", requires: "houseSpecial" },
+    ]
+  },
+  {
+    branch: "reputation", branchName: "The Reputation", branchIcon: "\uD83C\uDF96\uFE0F",
+    nodes: [
+      { id: "goodSide", name: "On Sal's Good Side", icon: "\uD83D\uDE0E", cost: 12, desc: "Every loan you take back costs 15% less to pay off.", requires: null },
+      { id: "silentPartner", name: "Sal's Silent Partner", icon: "\uD83E\uDD35", cost: 28, desc: "Loan payback costs 30% less in total, permanently.", requires: "goodSide" },
+    ]
+  },
+  {
+    branch: "fortune", branchName: "The Fortune", branchIcon: "\uD83C\uDF40",
+    nodes: [
+      { id: "goldenTouch", name: "Sal's Golden Touch", icon: "\u2734\uFE0F", cost: 45, desc: "A flat +5% on every payout in the club, every game, no charm required.", requires: null },
+      { id: "fortuneFavors", name: "Fortune Favors You", icon: "\uD83C\uDF00", cost: 90, desc: "That flat boost grows to +12% on every payout, forever.", requires: "goldenTouch" },
+    ]
+  },
+];
+function prestigeLuckBoost(perks) {
+  if (!perks) return 0;
+  return perks.fortuneFavors ? 0.12 : (perks.goldenTouch ? 0.05 : 0);
+}
+function allPrestigeNodes() {
+  const out = [];
+  PRESTIGE_TREE.forEach(function (b) { b.nodes.forEach(function (n) { out.push(n); }); });
+  return out;
+}
+function findPrestigeNode(id) {
+  return allPrestigeNodes().find(function (n) { return n.id === id; }) || null;
+}
+let DIAMOND_COIN = loadJSON("chipwreck_diamond_coin", false);
+function setDiamondCoin(v) {
+  DIAMOND_COIN = v;
+  try { localStorage.setItem("chipwreck_diamond_coin", JSON.stringify(v)); } catch (err) {}
+}
+let LEGACY_CROWN = loadJSON("chipwreck_legacy_crown", false);
+function setLegacyCrown(v) {
+  LEGACY_CROWN = v;
+  try { localStorage.setItem("chipwreck_legacy_crown", JSON.stringify(v)); } catch (err) {}
+}
+let FOUNDER_FIREWORKS = loadJSON("chipwreck_founder_fireworks", false);
+function setFounderFireworks(v) {
+  FOUNDER_FIREWORKS = v;
+  try { localStorage.setItem("chipwreck_founder_fireworks", JSON.stringify(v)); } catch (err) {}
+}
+let SAL_AURA = loadJSON("chipwreck_sal_aura", false);
+function setSalAura(v) {
+  SAL_AURA = v;
+  try { localStorage.setItem("chipwreck_sal_aura", JSON.stringify(v)); } catch (err) {}
 }
 
 /* ---------- confetti ---------- */
@@ -948,11 +1375,11 @@ function useConfetti() {
     }),
     coinBursts.map(function (b) {
       return b.bits.map(function (bit) {
-        return e("div", { key: bit.id, className: "coin-bit", style: { left: b.x + bit.dx, top: b.y, animationDelay: bit.delay + "s" } }, "\uD83D\uDCB0");
+        return e("div", { key: bit.id, className: "coin-bit", style: { left: b.x + bit.dx, top: b.y, animationDelay: bit.delay + "s" } }, e(CoinIcon, null));
       });
     }),
     bigTexts.map(function (t) {
-      return e("div", { key: t.id, className: t.jackpot ? "jackpot-text" : "big-win-text" }, t.jackpot ? "\uD83D\uDCB0 JACKPOT \uD83D\uDCB0" : "\uD83C\uDF89 BIG WIN \uD83C\uDF89");
+      return e("div", { key: t.id, className: t.jackpot ? "jackpot-text" : "big-win-text" }, t.jackpot ? [e(CoinIcon, null), " JACKPOT ", e(CoinIcon, null)] : "\uD83C\uDF89 BIG WIN \uD83C\uDF89");
     })
   );
   return { fire: fire, node: node, shaking: shaking };
@@ -970,7 +1397,7 @@ function useWalletFlash() {
 
 function WalletPill(props) {
   const cls = "wallet-pill" + (props.flash ? (props.flash.indexOf("win") === 0 ? " pop-win" : " pop-lose") : "");
-  return e("div", { className: cls }, e("span", { className: "coin-icon" }, "\uD83D\uDCB0"), fmt(props.wallet));
+  return e("div", { className: cls }, e("span", { className: "coin-icon" }, e(CoinIcon, null)), fmt(props.wallet));
 }
 
 function MarqueeLights(props) {
@@ -990,7 +1417,7 @@ function BetTray(props) {
   const maxWallet = props.maxWallet || 0;
   const available = CHIP_DENOMS.filter(function (c) { return maxWallet >= c.threshold; });
   return e("div", { className: "bet-tray" },
-    e("div", { className: "bet-tray-row" }, e("span", { className: "bet-tray-label" }, label), e("span", { className: "bet-amount" }, "\uD83D\uDCB0 " + fmt(bet))),
+    e("div", { className: "bet-tray-row" }, e("span", { className: "bet-tray-label" }, label), e("span", { className: "bet-amount" }, coinAmt(bet))),
     e("div", { className: "chip-row" },
       available.map(function (c) {
         return e("button", {
@@ -1084,11 +1511,15 @@ const GAMES = [
 ];
 
 function Lobby(props) {
-  const wallet = props.wallet, goTo = props.goTo;
+  const wallet = props.wallet, goTo = props.goTo, empireTier = props.empireTier || 0, prestigeStars = props.prestigeStars || 0;
   return e("div", null,
     e("div", { className: "lobby-hero" },
-      e("div", { className: "lobby-hero-amount" }, "\uD83D\uDCB0 " + fmt(wallet)),
-      e("div", { className: "lobby-hero-label" }, "Fake chips \u00B7 all in good fun")
+      e("div", { className: "lobby-hero-amount" }, coinAmt(wallet)),
+      e("div", { className: "lobby-hero-label" }, "Fake chips \u00B7 all in good fun"),
+      e("div", { className: "lobby-empire-badge" },
+        EMPIRE_TIERS[empireTier].name,
+        prestigeStars > 0 ? e("span", { className: "prestige-star-row" }, " " + "\u2605".repeat(Math.min(prestigeStars, 6)) + (prestigeStars > 6 ? "+" : "")) : null
+      )
     ),
     e("div", { className: "game-grid" },
       GAMES.map(function (g) {
@@ -1128,8 +1559,15 @@ function RouletteWheel(props) {
     const start = i * segAngle;
     return e("path", { key: num, d: describeArc(100, 100, 96, start, start + segAngle), fill: numberColor(num), stroke: "#2B1B12", strokeWidth: 1 });
   });
+  const deflectors = Array.from({ length: 12 }, function (_, i) {
+    const ang = (i * 30 * Math.PI) / 180;
+    return { x: 50 + 46 * Math.cos(ang), y: 50 + 46 * Math.sin(ang) };
+  });
   return e("div", { className: "wheel-wrap" },
     e("div", { className: "wheel-rim" }),
+    e("div", { className: "wheel-deflector-ring" },
+      deflectors.map(function (d, i) { return e("div", { key: i, className: "wheel-deflector", style: { left: d.x + "%", top: d.y + "%" } }); })
+    ),
     e("div", { className: "wheel-pointer" }),
     e("svg", { className: "wheel-svg", width: 210, height: 210, viewBox: "0 0 200 200", style: { transform: "rotate(" + rotation + "deg)" } },
       segs,
@@ -1148,7 +1586,7 @@ function RouletteGame(props) {
   const wallet = props.wallet, setWallet = props.setWallet, fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
   const maxWallet = props.maxWallet || 0;
   const charms = props.charms || {};
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
   const tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
   const [bet, setBet] = useState(0);
@@ -1157,6 +1595,7 @@ function RouletteGame(props) {
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState(null);
+  const [history, setHistory] = useState([]);
   const boardRef = useRef(null);
 
   const selectOutside = function (id) { setBetType(id); setBetNumber(null); };
@@ -1177,6 +1616,7 @@ function RouletteGame(props) {
     setRotation(finalRotation);
     setTimeout(function () {
       setSpinning(false);
+      setHistory(function (h) { return h.concat([winNumber]).slice(-10); });
       let won = false; let payout = 0;
       if (betNumber !== null) {
         won = betNumber === winNumber; payout = won ? bet * 36 * ghostMult : 0;
@@ -1216,11 +1656,14 @@ function RouletteGame(props) {
       e("div", { className: "corner-rivet tl" }), e("div", { className: "corner-rivet tr" }), e("div", { className: "corner-rivet bl" }), e("div", { className: "corner-rivet br" }),
       e("div", { className: "board-title" }, "Roulette"),
       e(MarqueeLights, { className: "board-lights", count: 12 }),
-      e(RouletteWheel, { rotation: rotation })
+      e(RouletteWheel, { rotation: rotation }),
+      history.length > 0 ? e("div", { className: "roulette-history" },
+        history.map(function (n, i) { return e("span", { key: i, className: "roulette-history-chip", style: { background: numberColor(n), color: n === 0 ? "var(--ink)" : "var(--white)" } }, n); })
+      ) : null
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
-      result.won ? ("\uD83C\uDF89 " + result.number + " hits! +\uD83D\uDCB0" + fmt(result.payout)) : ("Landed on " + result.number + " \u2014 no win this time" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
+      result.insured ? ["\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded", coinAmt(result.payout)] :
+      result.won ? ["\uD83C\uDF89 " + result.number + " hits! +", coinAmt(result.payout)] : ["Landed on " + result.number + " \u2014 no win this time", result.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(result.cashback), " cashback)"] : ""]
     ) : null,
     e("div", { className: "bet-type-row" },
       OUTSIDE_BETS.map(function (b) {
@@ -1242,7 +1685,8 @@ function DuckGame(props) {
   const wallet = props.wallet, setWallet = props.setWallet, fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
   const maxWallet = props.maxWallet || 0;
   const charms = props.charms || {};
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
+  const longConMult = 1 + charmEffect("longCon", charms.longCon || 0, "boost", 0);
   const tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
   const [bet, setBet] = useState(0);
@@ -1270,7 +1714,7 @@ function DuckGame(props) {
       if (winnerIdx !== -1) {
         setRacing(false);
         const won = winnerIdx === picked;
-        const payout = won ? bet * 4.5 * ghostMult : 0;
+        const payout = won ? bet * 4.5 * ghostMult * longConMult : 0;
         if (won) {
           setWallet(function (w) { return w + payout; });
           flashWallet("win");
@@ -1301,6 +1745,12 @@ function DuckGame(props) {
       e("div", { className: "board-title" }, "Duck Race"),
       e(MarqueeLights, { className: "board-lights", count: 12 }),
       e("div", { className: "race-track" },
+        e("div", { className: "pond-decor" },
+          [8, 22, 38, 55, 70, 85].map(function (l, i) {
+            return e("div", { key: i, className: "lily-pad", style: { left: l + "%", top: (12 + (i % 3) * 26) + "%" } });
+          })
+        ),
+        e("div", { className: "finish-banner" }),
         positions.map(function (p, i) {
           return e("div", { className: "lane", key: i },
             e("div", { className: "duck-slot", style: { left: "calc(" + p + "% - 17px)" } }, e(DuckSprite, { palette: DUCK_PALETTE[i], swimming: racing, size: 34 })),
@@ -1311,8 +1761,8 @@ function DuckGame(props) {
       )
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that race \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
-      result.won ? ("\uD83C\uDF89 Your duck wins! +\uD83D\uDCB0" + fmt(result.payout)) : (DUCK_PALETTE[result.winner].name + " won \u2014 not yours this time" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
+      result.insured ? ["\uD83D\uDEE1\uFE0F Sal's insurance covered that race \u2014 refunded", coinAmt(result.payout)] :
+      result.won ? ["\uD83C\uDF89 Your duck wins! +", coinAmt(result.payout)] : [DUCK_PALETTE[result.winner].name + " won \u2014 not yours this time", result.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(result.cashback), " cashback)"] : ""]
     ) : null,
     e("div", { className: "duck-pick-row" },
       DUCK_PALETTE.map(function (d, i) {
@@ -1342,7 +1792,7 @@ function PenguinGame(props) {
   const charms = props.charms || {}, tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
   const edge = charmEffect("goldTooth", charms.goldTooth || 0, "edge", 0.97);
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
   const [bet, setBet] = useState(0);
   const [difficulty, setDifficulty] = useState("easy");
   const [active, setActive] = useState(false);
@@ -1446,8 +1896,8 @@ function PenguinGame(props) {
       )
     ),
     ended ? e("div", { className: "result-banner " + (ended.won ? "win" : "lose") },
-      ended.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that one \u2014 refunded \uD83D\uDCB0" + fmt(ended.payout)) :
-      ended.won ? ("\uD83C\uDF89 Cashed out! +\uD83D\uDCB0" + fmt(ended.payout)) : ("The ice gave way \u2014 round over" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + ended.cashback + " cashback)" : ""))
+      ended.insured ? ["\uD83D\uDEE1\uFE0F Sal's insurance covered that one \u2014 refunded", coinAmt(ended.payout)] :
+      ended.won ? ["\uD83C\uDF89 Cashed out! +", coinAmt(ended.payout)] : ["The ice gave way \u2014 round over", ended.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(ended.cashback), " cashback)"] : ""]
     ) : null,
     !active ? e("div", { className: "difficulty-row" },
       DIFFICULTIES.map(function (d) {
@@ -1479,7 +1929,7 @@ function RocketGame(props) {
   const charms = props.charms || {}, tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
   const edge = charmEffect("goldTooth", charms.goldTooth || 0, "edge", 0.97);
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
   const [bet, setBet] = useState(0);
   const [flying, setFlying] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
@@ -1555,8 +2005,8 @@ function RocketGame(props) {
       )
     ),
     ended ? e("div", { className: "result-banner " + (ended.won ? "win" : "lose") },
-      ended.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that blast \u2014 refunded \uD83D\uDCB0" + fmt(ended.payout)) :
-      ended.won ? ("\uD83C\uDF89 Cashed out at " + multiplier.toFixed(2) + "\u00D7! +\uD83D\uDCB0" + fmt(ended.payout)) : ("Exploded at " + multiplier.toFixed(2) + "\u00D7 \u2014 lost the bet" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + ended.cashback + " cashback)" : ""))
+      ended.insured ? ["\uD83D\uDEE1\uFE0F Sal's insurance covered that blast \u2014 refunded", coinAmt(ended.payout)] :
+      ended.won ? ["\uD83C\uDF89 Cashed out at " + multiplier.toFixed(2) + "\u00D7! +", coinAmt(ended.payout)] : ["Exploded at " + multiplier.toFixed(2) + "\u00D7 \u2014 lost the bet", ended.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(ended.cashback), " cashback)"] : ""]
     ) : null,
     e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: maxWallet, disabled: flying }),
     flying
@@ -1667,6 +2117,28 @@ const CHARMS = [
     ],
     effectLabel: function (lv) { return "Active: slot payouts run " + (lv.boost * 100).toFixed(0) + "% hotter."; }
   },
+  {
+    id: "weightedDice", name: "Sal's Weighted Dice", icon: "\uD83C\uDFB2",
+    desc: "The dice at the craps table have a slight... preference.",
+    levels: [
+      { price: 900, boost: 0.08 },
+      { price: 3500, boost: 0.15 },
+      { price: 14000, boost: 0.25 },
+      { price: 50000, boost: 0.40 },
+    ],
+    effectLabel: function (lv) { return "Active: craps payouts run " + (lv.boost * 100).toFixed(0) + "% hotter."; }
+  },
+  {
+    id: "longCon", name: "Sal's Long Con", icon: "\uD83E\uDD86",
+    desc: "Sal's got an angle on the duck race and the peg board both.",
+    levels: [
+      { price: 900, boost: 0.08 },
+      { price: 3500, boost: 0.15 },
+      { price: 14000, boost: 0.25 },
+      { price: 50000, boost: 0.40 },
+    ],
+    effectLabel: function (lv) { return "Active: duck race and Plinko payouts run " + (lv.boost * 100).toFixed(0) + "% hotter."; }
+  },
 ];
 function charmEffect(id, level, key, fallback) {
   if (!level) return fallback;
@@ -1684,7 +2156,7 @@ function charmBadgeColor(level) {
 
 /* ================= FORTUNE CARDS ================= */
 const CARDS = [
-  { id: "cc1", name: "The Chip Stack", icon: "\uD83D\uDCB0", rarity: "common", weight: 20 },
+  { id: "cc1", name: "The Chip Stack", icon: "\uD83C\uDFC6", rarity: "common", weight: 20 },
   { id: "cc2", name: "The Lucky Duck", icon: "\uD83E\uDD86", rarity: "common", weight: 20 },
   { id: "cc3", name: "The Ice Walker", icon: "\uD83D\uDC27", rarity: "common", weight: 20 },
   { id: "cc4", name: "Loose Change", icon: "\uD83D\uDCB0", rarity: "common", weight: 20 },
@@ -1796,11 +2268,11 @@ function CardsView(props) {
       e("div", { className: "chest-scene" },
         revealed ? e(FortuneCard, { key: "reveal-" + revealKey, card: revealed.card, owned: true, big: true }) : e(TreasureChest, { opening: opening }),
         revealed ? (revealed.dupe
-          ? e("div", { className: "reveal-caption dupe" }, "Already had this one \u2014 Sal tossed in \uD83D\uDCB0" + revealed.refund + " instead.")
+          ? e("div", { className: "reveal-caption dupe" }, ["Already had this one \u2014 Sal tossed in", coinAmt(revealed.refund), "instead."])
           : e("div", { className: "reveal-caption" }, "New card! \u201C" + revealed.card.name + "\u201D added to your vault.")
         ) : e("div", { className: "reveal-caption idle" }, opening ? "Cracking it open\u2026" : "Open a chest for a random fortune card")
       ),
-      e("button", { className: "action-btn", disabled: opening || wallet < CHEST_PRICE, onClick: openChest }, opening ? "Opening\u2026" : ("Open a chest \u2014 \uD83D\uDCB0" + CHEST_PRICE))
+      e("button", { className: "action-btn", disabled: opening || wallet < CHEST_PRICE, onClick: openChest }, opening ? "Opening\u2026" : ["Open a chest \u2014", coinAmt(CHEST_PRICE)])
     ),
     e("div", { className: "settings-card" },
       e("div", { className: "settings-row" }, e("span", null, "Cards collected"), e("span", null, ownedCount + " / " + CARDS.length))
@@ -1843,7 +2315,8 @@ function CrapsGame(props) {
   const wallet = props.wallet, setWallet = props.setWallet, fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
   const maxWallet = props.maxWallet || 0;
   const charms = props.charms || {};
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
+  const diceMult = 1 + charmEffect("weightedDice", charms.weightedDice || 0, "boost", 0);
   const tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
   const [bet, setBet] = useState(0);
@@ -1858,7 +2331,7 @@ function CrapsGame(props) {
 
   const finish = function (outcome) {
     if (outcome === "win") {
-      const payout = bet * 2 * ghostMult;
+      const payout = bet * 2 * ghostMult * diceMult;
       setWallet(function (w) { return w + payout; });
       flashWallet("win");
       if (boardRef.current) { const r = boardRef.current.getBoundingClientRect(); fireConfetti(r.left + r.width / 2, r.top + 40, payout >= bet * 5); }
@@ -1940,14 +2413,14 @@ function CrapsGame(props) {
         ) : null,
         bet > 0 ? e("div", { className: "pass-line" },
           e("span", { className: "pass-line-label" }, "PASS LINE"),
-          e("span", { className: "pass-line-chip" }, "\uD83D\uDCB0" + fmt(bet))
+          e("span", { className: "pass-line-chip" }, coinAmt(bet))
         ) : null
       )
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that roll \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
-      result.won ? ("\uD83C\uDF89 Winner! +\uD83D\uDCB0" + fmt(result.payout)) :
-      ("Seven out \u2014 house wins" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
+      result.insured ? ["\uD83D\uDEE1\uFE0F Sal's insurance covered that roll \u2014 refunded", coinAmt(result.payout)] :
+      result.won ? ["\uD83C\uDF89 Winner! +", coinAmt(result.payout)] :
+      ["Seven out \u2014 house wins", result.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(result.cashback), " cashback)"] : ""]
     ) : null,
     phase === "betting" ? e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: maxWallet, disabled: rolling }) : null,
     (phase === "betting" || phase === "point") ? e("button", { className: "action-btn", disabled: rolling || (phase === "betting" && (bet <= 0 || bet > wallet)), onClick: roll }, rolling ? "Rolling\u2026" : (phase === "betting" ? "\uD83C\uDFB2 Shoot!" : "\uD83C\uDFB2 Roll it!")) : null,
@@ -1973,7 +2446,8 @@ function PlinkoGame(props) {
   const wallet = props.wallet, setWallet = props.setWallet, fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
   const maxWallet = props.maxWallet || 0;
   const charms = props.charms || {};
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
+  const longConMult = 1 + charmEffect("longCon", charms.longCon || 0, "boost", 0);
   const tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
   const [bet, setBet] = useState(0);
@@ -2009,7 +2483,7 @@ function PlinkoGame(props) {
           const mult = PLINKO_MULTS[outcome.slot];
           const isEdge = outcome.slot === 0 || outcome.slot === PLINKO_ROWS;
           if (mult >= 1) {
-            const payout = bet * mult * ghostMult;
+            const payout = bet * mult * ghostMult * longConMult;
             setWallet(function (w) { return w + payout; });
             flashWallet("win");
             if (boardRef.current) { const r = boardRef.current.getBoundingClientRect(); fireConfetti(r.left + r.width / 2, r.top + 40, isEdge ? "jackpot" : (payout >= bet * 5)); }
@@ -2046,7 +2520,7 @@ function PlinkoGame(props) {
             Array.from({ length: pegCount }, function (_, i) { return e("div", { className: "plinko-peg", key: i }); })
           );
         }),
-        chipPos ? e("div", { className: "plinko-chip", style: { left: chipPos.left + "%", top: chipPos.top + "%" } }, "\uD83D\uDCB0") : null
+        chipPos ? e("div", { className: "plinko-chip", style: { left: chipPos.left + "%", top: chipPos.top + "%" } }) : null
       ),
       e("div", { className: "plinko-slots" },
         PLINKO_MULTS.map(function (m, i) {
@@ -2056,8 +2530,8 @@ function PlinkoGame(props) {
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
       result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered the rest \u2014 refunded in full") :
-      result.won ? ("\uD83C\uDF89 Landed " + result.mult + "\u00D7! +\uD83D\uDCB0" + fmt(result.payout)) :
-      ("Landed " + result.mult + "\u00D7 \u2014 got \uD83D\uDCB0" + fmt(result.payout) + " back" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
+      result.won ? ["\uD83C\uDF89 Landed " + result.mult + "\u00D7! +", coinAmt(result.payout)] :
+      ["Landed " + result.mult + "\u00D7 \u2014 got", coinAmt(result.payout), "back", result.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(result.cashback), " cashback)"] : ""]
     ) : null,
     e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: maxWallet, disabled: dropping }),
     e("button", { className: "action-btn", disabled: dropping || bet <= 0 || bet > wallet, onClick: drop }, dropping ? "Dropping\u2026" : "Drop the chip")
@@ -2133,7 +2607,7 @@ const DEALER_LINES = [
 function BlackjackGame(props) {
   const wallet = props.wallet, setWallet = props.setWallet, fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
   const charms = props.charms || {};
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
   const pushBonus = charmEffect("markedDeck", charms.markedDeck || 0, "bonus", 0);
   const tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
@@ -2269,11 +2743,11 @@ function BlackjackGame(props) {
       )
     ),
     ended ? e("div", { className: "result-banner " + (ended.result === "lose" ? "lose" : "win") },
-      ended.result === "insured" ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that hand \u2014 refunded \uD83D\uDCB0" + fmt(ended.payout)) :
-      ended.result === "blackjack" ? ("\uD83C\uDFB4 Blackjack! +\uD83D\uDCB0" + fmt(ended.payout)) :
-      ended.result === "win" ? ("\uD83C\uDF89 You win! +\uD83D\uDCB0" + fmt(ended.payout)) :
-      ended.result === "push" ? (ended.marked ? ("\uD83C\uDFB4 Marked Deck push bonus! \uD83D\uDCB0" + fmt(ended.payout)) : ("Push \u2014 bet returned (\uD83D\uDCB0" + fmt(ended.payout) + ")")) :
-      ("Dealer wins" + (ended.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + ended.cashback + " cashback)" : ""))
+      ended.result === "insured" ? ["\uD83D\uDEE1\uFE0F Sal's insurance covered that hand \u2014 refunded", coinAmt(ended.payout)] :
+      ended.result === "blackjack" ? ["\uD83C\uDFB4 Blackjack! +", coinAmt(ended.payout)] :
+      ended.result === "win" ? ["\uD83C\uDF89 You win! +", coinAmt(ended.payout)] :
+      ended.result === "push" ? (ended.marked ? ["\uD83C\uDFB4 Marked Deck push bonus!", coinAmt(ended.payout)] : ["Push \u2014 bet returned (", coinAmt(ended.payout), ")"]) :
+      ["Dealer wins", ended.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(ended.cashback), " cashback)"] : ""]
     ) : null,
     phase === "betting" ? e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: props.maxWallet || 0, disabled: false }) : null,
     phase === "betting" ? e("button", { className: "action-btn", disabled: bet <= 0 || bet > wallet, onClick: deal }, "Deal") : null,
@@ -2292,7 +2766,7 @@ const SLOT_SYMBOLS = [
   { id: "bell", sym: "\uD83D\uDD14", weight: 18, triple: 5, pair: 2 },
   { id: "gem", sym: "\uD83D\uDC8E", weight: 12, triple: 10, pair: 3 },
   { id: "seven", sym: "7\uFE0F\u20E3", weight: 7, triple: 20, pair: 6 },
-  { id: "coin", sym: "\uD83D\uDCB0", weight: 3, triple: 60, pair: 15 },
+  { id: "coin", sym: "\uD83E\uDD47", weight: 3, triple: 60, pair: 15 },
 ];
 function weightedSlotSymbol() {
   const total = SLOT_SYMBOLS.reduce(function (s, x) { return s + x.weight; }, 0);
@@ -2315,14 +2789,14 @@ function resolveSlotSpin(reels) {
 function SlotsGame(props) {
   const wallet = props.wallet, setWallet = props.setWallet, fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
   const charms = props.charms || {};
-  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0);
+  const ghostMult = 1 + charmEffect("ghostStake", charms.ghostStake || 0, "boost", 0) + prestigeLuckBoost(props.prestigePerks);
   const reelsMult = 1 + charmEffect("loadedReels", charms.loadedReels || 0, "boost", 0);
   const edge = charmEffect("goldTooth", charms.goldTooth || 0, "edge", 0.97);
   const edgeMult = edge / 0.97;
   const tryInsurance = props.tryInsurance || function () { return false; };
   const applyCashback = props.applyCashback || function () { return 0; };
   const [bet, setBet] = useState(0);
-  const [reelSyms, setReelSyms] = useState([SLOT_SYMBOLS[0].sym, SLOT_SYMBOLS[0].sym, SLOT_SYMBOLS[0].sym]);
+  const [reelIds, setReelIds] = useState([SLOT_SYMBOLS[0].id, SLOT_SYMBOLS[0].id, SLOT_SYMBOLS[0].id]);
   const [spinning, setSpinning] = useState(false);
   const [pulled, setPulled] = useState(false);
   const [result, setResult] = useState(null);
@@ -2343,10 +2817,10 @@ function SlotsGame(props) {
       tick++;
       if (tick % 2 === 0) Sound.spinTick();
       if (tick === 14 || tick === 20 || tick === 26) Sound.chip();
-      setReelSyms([
-        tick < 14 ? weightedSlotSymbol().sym : final[0].sym,
-        tick < 20 ? weightedSlotSymbol().sym : final[1].sym,
-        tick < 26 ? weightedSlotSymbol().sym : final[2].sym,
+      setReelIds([
+        tick < 14 ? weightedSlotSymbol().id : final[0].id,
+        tick < 20 ? weightedSlotSymbol().id : final[1].id,
+        tick < 26 ? weightedSlotSymbol().id : final[2].id,
       ]);
       if (tick >= 26) {
         clearInterval(intervalRef.current);
@@ -2378,7 +2852,7 @@ function SlotsGame(props) {
 
   useEffect(function () { return function () { if (intervalRef.current) clearInterval(intervalRef.current); }; }, []);
 
-  const displayText = spinning ? "SPINNING\u2026" : (result ? (result.won ? (result.insured ? "COVERED" : "WIN \uD83D\uDCB0" + fmt(result.payout)) : "TRY AGAIN") : "READY");
+  const displayText = spinning ? "SPINNING\u2026" : (result ? (result.won ? (result.insured ? "COVERED" : ["WIN ", coinAmt(result.payout)]) : "TRY AGAIN") : "READY");
   const displayWin = !spinning && result && result.won;
 
   return e("div", { ref: boardRef },
@@ -2400,18 +2874,21 @@ function SlotsGame(props) {
         e("div", { className: "slot-frame" },
           e("div", { className: "slot-window-row" },
             e("div", { className: "slot-payline" }),
-            reelSyms.map(function (s, i) { return e("div", { className: "slot-reel" + (spinning ? " spin-blur" : ""), key: i }, s); })
+            reelIds.map(function (id, i) {
+              const sym = SLOT_SYMBOLS.find(function (s) { return s.id === id; });
+              return e("div", { className: "slot-reel" + (spinning ? " spin-blur" : ""), key: i }, id === "coin" ? e(CoinIcon, null) : sym.sym);
+            })
           )
         ),
         e("div", { className: "slot-tray" }),
         e("div", { className: "slot-feet" }, e("div", { className: "slot-foot" }), e("div", { className: "slot-foot" })),
-        e("div", { className: "slot-paytable" }, "\uD83D\uDCB0\u00D760 \u00B7 7\uFE0F\u20E3\u00D720 \u00B7 \uD83D\uDC8E\u00D710 \u00B7 \uD83D\uDD14\u00D75 \u00B7 \uD83C\uDF4B\u00D73 \u00B7 \uD83C\uDF52\u00D72 \u2014 2 matching pays a smaller consolation")
+        e("div", { className: "slot-paytable" }, [e(CoinIcon, null), "\u00D760 \u00B7 7\uFE0F\u20E3\u00D720 \u00B7 \uD83D\uDC8E\u00D710 \u00B7 \uD83D\uDD14\u00D75 \u00B7 \uD83C\uDF4B\u00D73 \u00B7 \uD83C\uDF52\u00D72 \u2014 2 matching pays a smaller consolation"])
       )
     ),
     result ? e("div", { className: "result-banner " + (result.won ? "win" : "lose") },
-      result.insured ? ("\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded \uD83D\uDCB0" + fmt(result.payout)) :
-      result.won ? ((result.jackpot ? "\uD83D\uDCB0 JACKPOT! +\uD83D\uDCB0" : (result.kind === "triple" ? "\uD83C\uDF89 Triple match! +\uD83D\uDCB0" : "Pair match! +\uD83D\uDCB0")) + fmt(result.payout)) :
-      ("No match \u2014 spin again" + (result.cashback > 0 ? " (\uD83D\uDD01 +\uD83D\uDCB0" + result.cashback + " cashback)" : ""))
+      result.insured ? ["\uD83D\uDEE1\uFE0F Sal's insurance covered that spin \u2014 refunded", coinAmt(result.payout)] :
+      result.won ? (result.jackpot ? [e(CoinIcon, null), " JACKPOT! +", coinAmt(result.payout)] : (result.kind === "triple" ? ["\uD83C\uDF89 Triple match! +", coinAmt(result.payout)] : ["Pair match! +", coinAmt(result.payout)])) :
+      ["No match \u2014 spin again", result.cashback > 0 ? [" (\uD83D\uDD01 +", coinAmt(result.cashback), " cashback)"] : ""]
     ) : null,
     e(BetTray, { bet: bet, setBet: setBet, wallet: wallet, maxWallet: props.maxWallet || 0, disabled: spinning }),
     e("button", { className: "action-btn", disabled: spinning || bet <= 0 || bet > wallet, onClick: spin }, spinning ? "Spinning\u2026" : "Pull the lever")
@@ -2419,6 +2896,296 @@ function SlotsGame(props) {
 }
 
 /* ================= SETTINGS ================= */
+const CASINO_LETTERS = ["C", "A", "S", "I", "N", "O"];
+const BUILDING_SPECS = [
+  { floors: 1, width: 168, windowsPerFloor: 6, sign: "broken", brokenLetters: [1, 5], ground: "dumpy", spotlights: false },
+  { floors: 1, width: 176, windowsPerFloor: 6, sign: "fixed", brokenLetters: [], ground: "tidy", spotlights: false },
+  { floors: 2, width: 184, windowsPerFloor: 6, sign: "lit", brokenLetters: [], ground: "awning", spotlights: false },
+  { floors: 3, width: 194, windowsPerFloor: 6, sign: "marquee", brokenLetters: [], ground: "canopy", spotlights: false },
+  { floors: 4, width: 206, windowsPerFloor: 7, sign: "marquee-gold", brokenLetters: [], ground: "redcarpet", spotlights: true },
+  { floors: 6, width: 222, windowsPerFloor: 7, sign: "neon", brokenLetters: [], ground: "redcarpet", spotlights: true },
+];
+function CasinoBuilding(props) {
+  const tierId = props.tierId;
+  const spec = BUILDING_SPECS[tierId];
+  const litFraction = [0.15, 0.3, 0.55, 0.7, 0.85, 1][tierId];
+  const windowPattern = useMemo(function () {
+    const pattern = [];
+    for (let f = 0; f < spec.floors; f++) {
+      const row = [];
+      for (let w = 0; w < spec.windowsPerFloor; w++) row.push(Math.random() < litFraction);
+      pattern.push(row);
+    }
+    return pattern;
+  }, [tierId]);
+  const floors = [];
+  for (let f = 0; f < spec.floors; f++) {
+    const windows = [];
+    for (let w = 0; w < spec.windowsPerFloor; w++) {
+      windows.push(e("div", { key: w, className: "cb-window" + (windowPattern[f][w] ? " lit" : "") }));
+    }
+    floors.push(e("div", { key: f, className: "cb-floor" }, windows));
+  }
+  const fancy = spec.sign === "marquee" || spec.sign === "marquee-gold" || spec.sign === "neon";
+  const roofLightCount = [2, 3, 4, 5, 6, 8][tierId];
+  const roofLights = [];
+  for (let i = 0; i < roofLightCount; i++) roofLights.push(e("div", { key: i, className: "cb-roof-bulb", style: { animationDelay: (i * 0.15) + "s" } }));
+  return e("div", { className: "cb-wrap" },
+    spec.spotlights ? e("div", { className: "cb-spotlight left" }) : null,
+    spec.spotlights ? e("div", { className: "cb-spotlight right" }) : null,
+    e("div", { className: "cb-sign-wrap" },
+      fancy ? e(MarqueeLights, { count: 12 }) : null,
+      e("div", { className: "cb-marquee cb-marquee-" + spec.sign },
+        CASINO_LETTERS.map(function (ch, i) {
+          const broken = spec.brokenLetters.indexOf(i) !== -1;
+          return e("span", { key: i, className: "cb-letter" + (broken ? " off" : "") + (spec.sign === "neon" ? " neon" : "") }, ch);
+        })
+      ),
+      fancy ? e(MarqueeLights, { count: 12 }) : null
+    ),
+    e("div", { className: "cb-roof-lights" }, roofLights),
+    e("div", { className: "cb-building" + (tierId >= 3 ? " rich" : ""), style: { width: spec.width + "px" } }, floors),
+    e("div", { className: "cb-door-glow" }),
+    e("div", { className: "cb-ground" },
+      spec.ground === "dumpy" ? e("div", { className: "cb-crack" }) : null,
+      spec.ground === "dumpy" ? e("div", { className: "cb-junker" },
+        e("div", { className: "cb-junker-body" }), e("div", { className: "cb-junker-wheel l" }), e("div", { className: "cb-junker-wheel r" })
+      ) : null,
+      spec.ground === "tidy" ? e("div", { className: "cb-mat" }) : null,
+      spec.ground === "awning" ? e("div", { className: "cb-awning" }) : null,
+      (spec.ground === "canopy" || spec.ground === "redcarpet") ? e("div", { className: "cb-canopy" }) : null,
+      spec.ground === "redcarpet" ? e("div", { className: "cb-carpet" }) : null,
+      e("div", { className: "cb-door" })
+    )
+  );
+}
+
+function EmpireDecor(props) {
+  const tierId = props.tierId;
+  const fireworks = props.fireworks;
+  const fwSpecs = [
+    { left: "20%", top: "22%", color: "#F5C542", delay: "0s" },
+    { left: "72%", top: "30%", color: "#C8203A", delay: "0.9s" },
+    { left: "48%", top: "18%", color: "#FFE08A", delay: "1.7s" },
+  ];
+  const patronPositions = [[14, false], [30, false], [46, true], [62, false], [78, true], [90, false]];
+  const patronCounts = [0, 2, 3, 4, 5, 6];
+  function patrons(n) {
+    return patronPositions.slice(0, n).map(function (p, i) {
+      return e("div", { key: i, className: "ed-patron" + (p[1] ? " fancy" : ""), style: { left: p[0] + "%" } },
+        e("div", { className: "ed-patron-head" }), e("div", { className: "ed-patron-body" })
+      );
+    });
+  }
+  let content = null;
+  if (tierId === 0) {
+    content = e("div", { className: "ed-layer" },
+      e("div", { className: "ed-brick" }),
+      e("div", { className: "ed-bulb-wire" }), e("div", { className: "ed-bulb dim" }),
+      e("span", { className: "ed-graffiti", style: { left: "8%", top: "60%", color: "#FF3FA4", transform: "rotate(-7deg)" } }, "SAL WUZ HERE"),
+      e("span", { className: "ed-graffiti", style: { right: "8%", top: "72%", color: "#7CFF6B", transform: "rotate(5deg)" } }, "fixer-upper"),
+      e("div", { className: "ed-puddle" }),
+      e("div", { className: "ed-cat" },
+        e("div", { className: "ed-cat-ear l" }), e("div", { className: "ed-cat-ear r" }),
+        e("div", { className: "ed-cat-body" }), e("div", { className: "ed-cat-tail" })
+      )
+    );
+  } else if (tierId === 1) {
+    content = e("div", { className: "ed-layer" },
+      e("div", { className: "ed-bulb-wire" }), e("div", { className: "ed-bulb" }),
+      e("div", { className: "ed-ribbon" }, "GRAND OPENING"),
+      e("div", { className: "ed-plant-pot" }), e("div", { className: "ed-plant-leaf" }),
+      patrons(patronCounts[1])
+    );
+  } else if (tierId === 2) {
+    content = e("div", { className: "ed-layer" },
+      [10, 30, 50, 70, 90].map(function (l, i) { return e("div", { key: i, className: "ed-string-bulb", style: { left: l + "%", top: (8 + Math.abs(2 - i) * 5) + "px" } }); }),
+      e("div", { className: "ed-curtain left" }), e("div", { className: "ed-curtain right" }),
+      e("div", { className: "ed-bar" }),
+      [30, 40, 50, 60].map(function (l, i) { return e("div", { key: i, className: "ed-bottle", style: { left: l + "%", background: i % 2 ? "var(--red)" : "var(--gold)" } }); }),
+      patrons(patronCounts[2])
+    );
+  } else if (tierId === 3) {
+    content = e("div", { className: "ed-layer" },
+      e("div", { className: "ed-chand-wire" }),
+      [0, 1, 2, 3, 4].map(function (i) { return e("div", { key: i, className: "ed-chand-bulb", style: { left: (42 + i * 4) + "%" } }); }),
+      e("div", { className: "ed-pillar left" }), e("div", { className: "ed-pillar right" }),
+      e("div", { className: "ed-floor" }),
+      e("div", { className: "ed-wheel-accent" }),
+      patrons(patronCounts[3])
+    );
+  } else if (tierId === 4) {
+    content = e("div", { className: "ed-layer" },
+      e("div", { className: "ed-chand-wire" }),
+      [0, 1, 2, 3, 4, 5, 6].map(function (i) { return e("div", { key: i, className: "ed-chand-bulb", style: { left: (36 + i * 4) + "%" } }); }),
+      e("div", { className: "ed-pillar left thick" }), e("div", { className: "ed-pillar right thick" }),
+      e("div", { className: "ed-stanchion left" }), e("div", { className: "ed-stanchion right" }), e("div", { className: "ed-rope" }),
+      e("div", { className: "ed-floor marble" }),
+      e("div", { className: "ed-champagne" }, e("div", { className: "ed-champagne-glass" }), e("div", { className: "ed-champagne-glass" })),
+      patrons(patronCounts[4])
+    );
+  } else if (tierId === 5) {
+    content = e("div", { className: "ed-layer" },
+      [8, 10, 25, 65, 82, 90].map(function (l, i) { return e("div", { key: i, className: "ed-star", style: { left: l + "%", top: (8 + (i % 3) * 8) + "%", animationDelay: (i * 0.3) + "s" } }); }),
+      e("div", { className: "ed-railing" }),
+      e("div", { className: "ed-moon" }),
+      e("div", { className: "ed-skyline" },
+        [22, 34, 18, 40, 26, 30].map(function (h, i) {
+          return e("div", { key: i, className: "ed-building", style: { height: h + "px" } },
+            e("span", { className: "ed-window", style: { left: "30%", top: "20%" } }),
+            e("span", { className: "ed-window", style: { left: "60%", top: "45%" } })
+          );
+        })
+      ),
+      patrons(patronCounts[5])
+    );
+  }
+  return e("div", null,
+    content,
+    fireworks ? e("div", { className: "ed-layer" },
+      fwSpecs.map(function (f, i) { return e("div", { key: i, className: "ed-firework", style: { left: f.left, top: f.top, background: f.color, animationDelay: f.delay } }); })
+    ) : null
+  );
+}
+
+function EmpireView(props) {
+  const wallet = props.wallet, setWallet = props.setWallet, empireTier = props.empireTier, setEmpireTier = props.setEmpireTier;
+  const prestigeStars = props.prestigeStars || 0;
+  const prestigePerks = props.prestigePerks || {};
+  const fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
+  const current = EMPIRE_TIERS[empireTier];
+  const next = EMPIRE_TIERS[empireTier + 1] || null;
+  const nextCost = next ? empireTierCost(next.id, prestigeStars) : null;
+  const discountPct = Math.min(PRESTIGE_DISCOUNT_CAP, prestigeStars * PRESTIGE_DISCOUNT_PER_STAR) * 100;
+  const ownedCount = allPrestigeNodes().filter(function (n) { return prestigePerks[n.id]; }).length;
+  const boardRef = useRef(null);
+
+  const renovate = function () {
+    if (!next || wallet < nextCost) return;
+    setWallet(function (w) { return w - nextCost; });
+    setEmpireTier(next.id);
+    flashWallet("win");
+    Sound.renovate();
+    if (boardRef.current) {
+      const r = boardRef.current.getBoundingClientRect();
+      fireConfetti(r.left + r.width / 2, r.top + 60, "big");
+    }
+  };
+
+  return e("div", { ref: boardRef },
+    e("div", { className: "empire-section-label" }, "Sal's Club \u2014 Tier " + (empireTier + 1) + " of " + EMPIRE_TIERS.length),
+    e("div", { className: "empire-building-scene" },
+      [[10, 14], [88, 10], [22, 30], [78, 24], [50, 8], [35, 45], [65, 40], [6, 55]].map(function (p, i) {
+        return e("div", { key: i, className: "eb-star", style: { left: p[0] + "%", top: p[1] + "%", animationDelay: (i * 0.3) + "s" } });
+      }),
+      e(CasinoBuilding, { tierId: empireTier })
+    ),
+    e("div", { className: "empire-info-card" },
+      e("div", { className: "empire-tier-name" }, current.name),
+      e("div", { className: "empire-tier-desc" }, current.desc),
+      e("div", { className: "empire-ladder" },
+        EMPIRE_TIERS.map(function (t, i) {
+          return e("div", { key: t.id, className: "empire-rung" + (i <= empireTier ? " done" : "") + (i === empireTier ? " current" : "") }, i + 1);
+        })
+      ),
+      next ? e("div", { className: "empire-next-card" },
+        e("div", { className: "empire-next-name" }, "Next: " + next.name),
+        e("div", { className: "empire-next-desc" }, next.desc),
+        e("button", { className: "action-btn", disabled: wallet < nextCost, onClick: renovate }, ["Renovate \u2014", coinAmt(nextCost)])
+      ) : e("div", { className: "empire-maxed" }, "\uD83C\uDF89 You've built the whole club. Sal's officially out of ideas.")
+    ),
+
+    e("div", { className: "empire-section-label" }, "Inside the club"),
+    e("div", { className: "empire-scene" },
+      e(EmpireDecor, { tierId: empireTier, fireworks: FOUNDER_FIREWORKS })
+    ),
+
+    e("div", { className: "settings-card" },
+      e("div", { className: "settings-row" }, e("span", null, "Current chips"), e("span", null, coinAmt(wallet))),
+      prestigeStars > 0 ? e("div", { className: "settings-row" }, e("span", null, "Prestige"), e("span", { className: "prestige-star-row" }, "\u2605".repeat(Math.min(prestigeStars, 12)) + (prestigeStars > 12 ? (" +" + (prestigeStars - 12)) : ""))) : null,
+      prestigeStars > 0 ? e("div", { style: { fontSize: 11, fontWeight: 700, color: "var(--ink-soft)", marginTop: 2 } }, "Renovations cost " + discountPct.toFixed(0) + "% less thanks to your prestige.") : null,
+      ownedCount > 0 ? e("div", { className: "settings-row" }, e("span", null, "Prestige perks unlocked"), e("span", null, ownedCount + " / " + allPrestigeNodes().length)) : null,
+      e("div", { style: { fontSize: 10.5, fontWeight: 700, color: "var(--ink-soft)", marginTop: 4, lineHeight: 1.4 } }, "The skill tree only opens on Reopening Night \u2014 toss the coin to see it again.")
+    )
+  );
+}
+
+function PrestigeTreeView(props) {
+  const prestigeStars = props.prestigeStars || 0;
+  const prestigePerks = props.prestigePerks || {};
+  const buyPerk = props.buyPerk || function () {};
+  const onClose = props.onClose || function () {};
+  const fireConfetti = props.fireConfetti, flashWallet = props.flashWallet;
+  const justEarned = props.justEarned || 0;
+  const [justBought, setJustBought] = useState(null);
+  const boardRef = useRef(null);
+
+  const allNodes = allPrestigeNodes();
+  const ownedCount = allNodes.filter(function (n) { return prestigePerks[n.id]; }).length;
+  const pct = Math.round((ownedCount / allNodes.length) * 100);
+  const sparklePositions = [[6, 12], [92, 18], [15, 78], [85, 70], [50, 8], [30, 90], [70, 45], [4, 50]];
+
+  const purchase = function (node) {
+    const owned = !!prestigePerks[node.id];
+    const prereqMet = !node.requires || prestigePerks[node.requires];
+    if (owned || !prereqMet || prestigeStars < node.cost) return;
+    buyPerk(node.id);
+    flashWallet("win");
+    Sound.prestige();
+    setJustBought(node.id);
+    setTimeout(function () { setJustBought(null); }, 650);
+    if (boardRef.current) {
+      const r = boardRef.current.getBoundingClientRect();
+      fireConfetti(r.left + r.width / 2, r.top + 60, "big");
+    }
+  };
+
+  return e("div", { ref: boardRef },
+    e("div", { className: "tree-header" },
+      e("div", { className: "tree-title" }, justEarned > 0 ? "\u2605 Reopening Night" : "Prestige Skill Tree"),
+      e("div", { className: "tree-subtitle" }, justEarned > 0 ? ("You earned " + justEarned + " prestige star" + (justEarned > 1 ? "s" : "") + " from that run.") : "Spend stars on permanent perks \u2014 they survive every future reset."),
+      e("div", { className: "tree-star-count" }, "\u2605 " + prestigeStars + " available"),
+      e("div", { className: "tree-progress" },
+        e("div", { className: "tree-progress-bar" }, e("div", { className: "tree-progress-fill", style: { width: pct + "%" } })),
+        e("div", { className: "tree-progress-label" }, ownedCount + " / " + allNodes.length + " unlocked")
+      )
+    ),
+    e(MarqueeLights, { count: 14 }),
+    e("div", { className: "tree-scene" },
+      e("div", { className: "tree-sparkle-field" },
+        sparklePositions.map(function (p, i) { return e("div", { key: i, className: "tree-sparkle", style: { left: p[0] + "%", top: p[1] + "%", animationDelay: (i * 0.28) + "s" } }); })
+      ),
+      e("div", { className: "tree-branches" },
+        PRESTIGE_TREE.map(function (branch) {
+          return e("div", { key: branch.branch, className: "tree-branch" },
+            e("div", { className: "tree-branch-name" }, branch.branchIcon + " " + branch.branchName),
+            branch.nodes.map(function (node, i) {
+              const owned = !!prestigePerks[node.id];
+              const prereqMet = !node.requires || prestigePerks[node.requires];
+              const available = !owned && prereqMet && prestigeStars >= node.cost;
+              const locked = !owned && !prereqMet;
+              return e("div", { key: node.id },
+                i > 0 ? e("div", { className: "tree-line" + (owned || (prestigePerks[branch.nodes[i - 1].id]) ? " lit" : "") }) : null,
+                e("div", {
+                  className: "tree-node" + (owned ? " owned" : available ? " available" : " locked") + (justBought === node.id ? " just-bought" : ""),
+                  onClick: function () { purchase(node); }
+                },
+                  e("span", { className: "tree-node-icon" }, node.icon),
+                  !owned ? e("span", { className: "tree-node-cost" }, "\u2605" + node.cost) : null
+                ),
+                e("div", { className: "tree-node-name" }, node.name),
+                e("div", { className: "tree-node-tooltip" }, locked ? "Requires " + findPrestigeNode(node.requires).name : node.desc)
+              );
+            })
+          );
+        })
+      )
+    ),
+    e(MarqueeLights, { count: 14 }),
+    e("button", { className: "action-btn tree-continue-btn", onClick: onClose }, justEarned > 0 ? "Back to the club" : "Close")
+  );
+}
+
 function WishingWell(props) {
   const onWish = props.onWish;
   const [tossing, setTossing] = useState(false);
@@ -2432,10 +3199,15 @@ function WishingWell(props) {
     setCoinKey(function (k) { return k + 1; });
     setTimeout(function () {
       Sound.wishSplash();
-      onWish();
+      const starsGained = onWish();
       setTossing(false);
-      setMessage("Wish granted. Fresh start.");
-      setTimeout(function () { setMessage(null); }, 2600);
+      if (starsGained > 0) {
+        Sound.prestige();
+        setMessage("\u2605 Reopening night! +" + starsGained + " prestige star" + (starsGained > 1 ? "s" : "") + ".");
+      } else {
+        setMessage("Wish granted. Fresh start.");
+      }
+      setTimeout(function () { setMessage(null); }, 3200);
     }, 750);
   };
 
@@ -2450,8 +3222,8 @@ function WishingWell(props) {
       tossing ? e("div", { className: "well-ripple" }) : null
     ),
     e("div", { className: "well-label" }, "Toss a coin, wish for a fresh start"),
-    e("div", { className: "well-sub" }, "Refills to \uD83D\uDCB0 1,000 \u00B7 clears debt"),
-    message ? e("div", { className: "wish-message" }, "\uD83D\uDCB0 " + message) : null
+    e("div", { className: "well-sub" }, ["Refills to", coinAmt(1000), "\u00B7 clears debt \u00B7 resets your empire for a prestige star"]),
+    message ? e("div", { className: "wish-message" }, [e(CoinIcon, null), " " + message]) : null
   );
 }
 
@@ -2459,6 +3231,8 @@ function SettingsView(props) {
   const wallet = props.wallet, setWallet = props.setWallet, debt = props.debt, setDebt = props.setDebt;
   const charms = props.charms, buyCharm = props.buyCharm, resetAll = props.resetAll;
   const maxWallet = props.maxWallet || 0;
+  const prestigePerks = props.prestigePerks || {};
+  const vigDiscount = prestigePerks.silentPartner ? 0.30 : (prestigePerks.goodSide ? 0.15 : 0);
   const [line] = useState(function () { return SHARK_LINES[Math.floor(Math.random() * SHARK_LINES.length)]; });
   const [soundEnabled, setSoundEnabled] = useState(function () { return SOUND_ON; });
 
@@ -2471,8 +3245,9 @@ function SettingsView(props) {
 
   const takeLoan = function (offer) {
     if (debt > 0) return;
+    const owe = Math.round(offer.owe * (1 - vigDiscount));
     setWallet(function (w) { return w + offer.amount; });
-    setDebt(function (d) { return d + offer.owe; });
+    setDebt(function (d) { return d + owe; });
   };
   const payOff = function () {
     if (wallet < debt) return;
@@ -2484,9 +3259,9 @@ function SettingsView(props) {
 
   return e("div", null,
     e("div", { className: "settings-card" },
-      e("div", { className: "settings-row" }, e("span", null, "Current chips"), e("span", null, "\uD83D\uDCB0 " + fmt(wallet))),
+      e("div", { className: "settings-row" }, e("span", null, "Current chips"), e("span", null, coinAmt(wallet))),
       e("div", { className: "settings-row" }, e("span", null, "High-roller status"), e("span", null, status.name)),
-      status.next ? e("div", { style: { fontSize: 11, fontWeight: 700, color: "var(--ink-soft)", marginTop: 2 } }, "Next: " + status.next.name + " at \uD83D\uDCB0" + fmt(status.next.threshold) + " all-time high") : null,
+      status.next ? e("div", { style: { fontSize: 11, fontWeight: 700, color: "var(--ink-soft)", marginTop: 2 } }, ["Next: " + status.next.name + " at", coinAmt(status.next.threshold), "all-time high"]) : null,
       e("div", { className: "settings-row", style: { marginTop: 4, paddingTop: 10, borderTop: "1px solid var(--line, #eee)" } },
         e("span", null, "Sound effects"),
         e("button", { className: "stamp-btn", style: { borderColor: "var(--felt-deep)", color: "var(--felt-deep)" }, onClick: toggleSound }, soundEnabled ? "On \uD83D\uDD0A" : "Off \uD83D\uDD07")
@@ -2505,20 +3280,24 @@ function SettingsView(props) {
         e("div", { className: "speech-bubble" }, "Big Sal: " + line)
       ),
       e("div", { className: "alley-puddle" }),
-      debt > 0 ? e("div", { className: "debt-note" }, e("span", null, "You owe Big Sal"), e("span", null, "\uD83D\uDCB0 " + fmt(debt))) : null,
+      debt > 0 ? e("div", { className: "debt-note" }, e("span", null, "You owe Big Sal"), e("span", null, coinAmt(debt))) : null,
 
       e("div", { className: "alley-section-title" }, "Loans"),
       debt > 0 ? e("div", { style: { fontSize: 10.5, fontWeight: 700, color: "rgba(255,255,255,0.55)", textAlign: "center", marginBottom: 10 } }, "Big Sal's not floating you another loan while you're still into him.") : null,
       LOAN_OFFERS.map(function (o, i) {
+        const discountedOwe = Math.round(o.owe * (1 - vigDiscount));
         return e("div", { key: o.amount, className: "deal-card " + (i % 2 === 0 ? "tilt-l" : "tilt-r") + (debt > 0 ? " deal-locked" : "") },
           e("div", null,
-            e("div", { className: "loan-card-amt" }, "\uD83D\uDCB0 " + fmt(o.amount)),
-            e("div", { className: "loan-card-owe" }, "Pay back " + fmt(o.owe))
+            e("div", { className: "loan-card-amt" }, coinAmt(o.amount)),
+            e("div", { className: "loan-card-owe" },
+              vigDiscount > 0 ? e("span", { style: { textDecoration: "line-through", opacity: 0.55, marginRight: 4 } }, fmt(o.owe)) : null,
+              "Pay back " + fmt(discountedOwe)
+            )
           ),
           e("button", { className: "stamp-btn", disabled: debt > 0, onClick: function () { takeLoan(o); } }, "Take it")
         );
       }),
-      debt > 0 ? e("button", { className: "action-btn", style: { marginTop: 4, marginBottom: 4 }, disabled: wallet < debt, onClick: payOff }, "Pay off debt (\uD83D\uDCB0" + fmt(debt) + ")") : null,
+      debt > 0 ? e("button", { className: "action-btn", style: { marginTop: 4, marginBottom: 4 }, disabled: wallet < debt, onClick: payOff }, ["Pay off debt (", coinAmt(debt), ")"]) : null,
 
       e("div", { className: "alley-section-title", style: { marginTop: 16 } }, "Sal's Lucky Charms"),
       CHARMS.map(function (c) {
@@ -2540,12 +3319,12 @@ function SettingsView(props) {
           ),
           maxed
             ? e("span", { className: "charm-owned-badge" }, "MAX")
-            : e("button", { className: "stamp-btn", disabled: wallet < nextDef.price, onClick: function () { buyCharm(c.id); } }, (level > 0 ? "Upgrade " : "Buy ") + "\uD83D\uDCB0" + fmt(nextDef.price))
+            : e("button", { className: "stamp-btn", disabled: wallet < nextDef.price, onClick: function () { buyCharm(c.id); } }, [(level > 0 ? "Upgrade " : "Buy "), coinAmt(nextDef.price)])
         );
       }),
 
       e(WishingWell, { onWish: resetAll }),
-      e("div", { style: { fontSize: 10.5, color: "rgba(255,255,255,0.35)", lineHeight: 1.5, fontWeight: 700, marginTop: 14, textAlign: "center" } }, "Sal's Club uses fully fake chips \u2014 nothing here is real money. Big Sal is fake too, mostly harmless. Tossing the coin wipes charms too \u2014 truly starting over.")
+      e("div", { style: { fontSize: 10.5, color: "rgba(255,255,255,0.35)", lineHeight: 1.5, fontWeight: 700, marginTop: 14, textAlign: "center" } }, "Sal's Club uses fully fake chips \u2014 nothing here is real money. Big Sal is fake too, mostly harmless. Tossing the coin wipes charms and your empire too \u2014 but if you'd built anything, you keep a permanent prestige star for it.")
     )
   );
 }
@@ -2571,10 +3350,16 @@ function App() {
   const [charms, setCharms] = useState(function () { return loadJSON("chipwreck_charms", {}); });
   const [insuranceRecord, setInsuranceRecord] = useState(function () { return loadJSON("chipwreck_insurance_record", { date: null, used: 0 }); });
   const [collection, setCollection] = useState(function () { return loadJSON("chipwreck_collection", {}); });
+  const [empireTier, setEmpireTier] = useState(function () { return loadJSON("chipwreck_empire_tier", 0); });
+  const [prestigeStars, setPrestigeStars] = useState(function () { return loadJSON("chipwreck_prestige_stars", 0); });
+  const [prestigePerks, setPrestigePerks] = useState(function () { return loadJSON("chipwreck_prestige_perks", {}); });
   const { flash, trigger } = useWalletFlash();
   const { fire, node: confettiNode, shaking } = useConfetti();
   const [showSettings, setShowSettings] = useState(false);
   const [showCollection, setShowCollection] = useState(false);
+  const [showEmpire, setShowEmpire] = useState(false);
+  const [showPrestigeTree, setShowPrestigeTree] = useState(false);
+  const [justEarnedStars, setJustEarnedStars] = useState(0);
 
   useEffect(function () { try { localStorage.setItem("chipwreck_wallet", JSON.stringify(wallet)); } catch (err) {} }, [wallet]);
   useEffect(function () { if (wallet > maxWallet) setMaxWallet(wallet); }, [wallet]);
@@ -2583,6 +3368,9 @@ function App() {
   useEffect(function () { try { localStorage.setItem("chipwreck_charms", JSON.stringify(charms)); } catch (err) {} }, [charms]);
   useEffect(function () { try { localStorage.setItem("chipwreck_insurance_record", JSON.stringify(insuranceRecord)); } catch (err) {} }, [insuranceRecord]);
   useEffect(function () { try { localStorage.setItem("chipwreck_collection", JSON.stringify(collection)); } catch (err) {} }, [collection]);
+  useEffect(function () { try { localStorage.setItem("chipwreck_empire_tier", JSON.stringify(empireTier)); } catch (err) {} }, [empireTier]);
+  useEffect(function () { try { localStorage.setItem("chipwreck_prestige_stars", JSON.stringify(prestigeStars)); } catch (err) {} }, [prestigeStars]);
+  useEffect(function () { try { localStorage.setItem("chipwreck_prestige_perks", JSON.stringify(prestigePerks)); } catch (err) {} setDiamondCoin(!!prestigePerks.diamondCoin); setLegacyCrown(!!prestigePerks.legacy); setFounderFireworks(!!prestigePerks.fireworks); setSalAura(!!prestigePerks.aura); }, [prestigePerks]);
 
   const buyCharm = function (id) {
     const def = CHARMS.find(function (c) { return c.id === id; });
@@ -2614,19 +3402,48 @@ function App() {
     if (rebate > 0) setWallet(function (w) { return w + rebate; });
     return rebate;
   };
-  const resetAll = function () {
-    setWallet(1000);
-    setDebt(0);
-    setCharms({});
-    setInsuranceRecord({ date: null, used: 0 });
+  const buyPerk = function (id) {
+    const node = findPrestigeNode(id);
+    if (!node || prestigePerks[id] || prestigeStars < node.cost) return;
+    if (node.requires && !prestigePerks[node.requires]) return;
+    setPrestigeStars(function (s) { return s - node.cost; });
+    setPrestigePerks(function (p) { const next = Object.assign({}, p); next[id] = true; return next; });
   };
 
-  const gameProps = { wallet: wallet, setWallet: setWallet, maxWallet: maxWallet, fireConfetti: fire, flashWallet: trigger, charms: charms, tryInsurance: tryInsurance, applyCashback: applyCashback };
+  const resetAll = function () {
+    const starsGained = empireTier > 0 ? empireTier : 0;
+    const startWallet = prestigePerks.vault ? 20000 : (prestigePerks.nestEgg ? 8000 : (prestigePerks.grandReopening ? 2500 : 1000));
+    const startTier = prestigePerks.blueprint ? 3 : (prestigePerks.foundation ? 2 : (prestigePerks.salsTrust ? 1 : 0));
+    const startCharms = {};
+    if (prestigePerks.blackBook) startCharms.ghostStake = 1;
+    if (prestigePerks.houseSpecial) startCharms.goldTooth = 1;
+    if (prestigePerks.fullConfidence) startCharms.cashback = 1;
+    setWallet(startWallet);
+    setDebt(0);
+    setCharms(startCharms);
+    setInsuranceRecord({ date: null, used: 0 });
+    setEmpireTier(startTier);
+    if (starsGained > 0) setPrestigeStars(function (s) { return s + starsGained; });
+    return starsGained;
+  };
+
+  const resetAndMaybeOpenTree = function () {
+    const starsGained = resetAll();
+    if (starsGained > 0) {
+      setJustEarnedStars(starsGained);
+      setShowPrestigeTree(true);
+    }
+    return starsGained;
+  };
+
+  const gameProps = { wallet: wallet, setWallet: setWallet, maxWallet: maxWallet, fireConfetti: fire, flashWallet: trigger, charms: charms, tryInsurance: tryInsurance, applyCashback: applyCashback, prestigePerks: prestigePerks };
 
   let body;
-  if (showSettings) body = e(SettingsView, { wallet: wallet, setWallet: setWallet, maxWallet: maxWallet, debt: debt, setDebt: setDebt, charms: charms, buyCharm: buyCharm, resetAll: resetAll });
+  if (showPrestigeTree) body = e(PrestigeTreeView, { prestigeStars: prestigeStars, prestigePerks: prestigePerks, buyPerk: buyPerk, justEarned: justEarnedStars, onClose: function () { setShowPrestigeTree(false); setJustEarnedStars(0); }, fireConfetti: fire, flashWallet: trigger });
+  else if (showSettings) body = e(SettingsView, { wallet: wallet, setWallet: setWallet, maxWallet: maxWallet, debt: debt, setDebt: setDebt, charms: charms, buyCharm: buyCharm, resetAll: resetAndMaybeOpenTree, prestigePerks: prestigePerks });
   else if (showCollection) body = e(CardsView, { wallet: wallet, setWallet: setWallet, collection: collection, setCollection: setCollection, fireConfetti: fire, flashWallet: trigger });
-  else if (tab === "lobby") body = e(Lobby, { wallet: wallet, goTo: function (id) { setTab(id); } });
+  else if (showEmpire) body = e(EmpireView, { wallet: wallet, setWallet: setWallet, empireTier: empireTier, setEmpireTier: setEmpireTier, prestigeStars: prestigeStars, prestigePerks: prestigePerks, fireConfetti: fire, flashWallet: trigger });
+  else if (tab === "lobby") body = e(Lobby, { wallet: wallet, goTo: function (id) { setTab(id); }, empireTier: empireTier, prestigeStars: prestigeStars });
   else if (tab === "roulette") body = e(RouletteGame, gameProps);
   else if (tab === "ducks") body = e(DuckGame, gameProps);
   else if (tab === "penguin") body = e(PenguinGame, gameProps);
@@ -2636,22 +3453,24 @@ function App() {
   else if (tab === "craps") body = e(CrapsGame, gameProps);
   else if (tab === "plinko") body = e(PlinkoGame, gameProps);
 
-  return e("div", { className: "app" + (shaking ? " jackpot-shake" : "") },
+  const themeVars = EMPIRE_TIERS[empireTier].vars;
+  return e("div", { className: "app tier-" + empireTier + (shaking ? " jackpot-shake" : "") + (prestigePerks.aura ? " sal-aura" : ""), style: themeVars },
     confettiNode,
     e("div", { className: "top-bar" },
-      e("div", { className: "wordmark" }, "Sal's Club", e("span", { className: "dot" }, ".")),
+      e("div", { className: "wordmark" }, "Sal's Club", e("span", { className: "dot" }, "."), prestigePerks.legacy ? e("span", { className: "legacy-crown" }, "\uD83D\uDC51") : null),
       e("div", { className: "top-right" },
         e(WalletPill, { wallet: wallet, flash: flash }),
-        e("div", { className: "gear-btn", onClick: function () { setShowSettings(false); setShowCollection(function (s) { return !s; }); } }, showCollection ? "\u2715" : "\uD83C\uDFB4"),
-        e("div", { className: "gear-btn", onClick: function () { setShowCollection(false); setShowSettings(function (s) { return !s; }); } }, showSettings ? "\u2715" : "\u2699")
+        e("div", { className: "gear-btn", onClick: function () { Sound.navClick(); setShowSettings(false); setShowCollection(false); setShowEmpire(function (s) { return !s; }); } }, showEmpire ? "\u2715" : "\uD83C\uDFDB\uFE0F"),
+        e("div", { className: "gear-btn", onClick: function () { Sound.navClick(); setShowSettings(false); setShowEmpire(false); setShowCollection(function (s) { return !s; }); } }, showCollection ? "\u2715" : "\uD83C\uDFB4"),
+        e("div", { className: "gear-btn", onClick: function () { Sound.navClick(); setShowCollection(false); setShowEmpire(false); setShowSettings(function (s) { return !s; }); } }, showSettings ? "\u2715" : "\u2699")
       )
     ),
-    e(MarqueeLights, { className: "marquee-strip", count: 18 }),
+    e(MarqueeLights, { className: "marquee-strip", count: 18 + empireTier * 4 }),
     e("div", { className: "content" }, body),
-    e(MarqueeLights, { className: "marquee-strip", count: 18 }),
+    e(MarqueeLights, { className: "marquee-strip", count: 18 + empireTier * 4 }),
     e("div", { className: "bottom-nav" },
       TABS.map(function (t) {
-        return e("button", { key: t.id, className: "nav-btn" + (!showSettings && !showCollection && tab === t.id ? " active" : ""), onClick: function () { setShowSettings(false); setShowCollection(false); setTab(t.id); } }, e("span", { className: "nav-icon" }, t.icon), t.label);
+        return e("button", { key: t.id, className: "nav-btn" + (!showSettings && !showCollection && !showEmpire && tab === t.id ? " active" : ""), onClick: function () { Sound.navClick(); setShowSettings(false); setShowCollection(false); setShowEmpire(false); setTab(t.id); } }, e("span", { className: "nav-icon" }, t.icon), t.label);
       })
     )
   );
